@@ -1,0 +1,866 @@
+openapi: 3.0.0
+info:
+  title: Authorization API
+  version: '1.0'
+  description: 'Schools can create OAuth Applications for vendors in Veracross. OAuth Applications allow for vendors to use Veracross OAuth SSO to enable users to log in to vendor sites with their Veracross Account. Using SSO provides several benefits for Veracross users:
+
+
+    - _User experience_: If all of a school''s vendors are integrated via OAuth SSO, then Veracross users only need to manage one account. (Note: Veracross OAuth SSO will work for all Veracross account types, including MFA, External Identity Providers (Google/Okta/Azure, etc), and school domain accounts).
+
+    - _Security_: No user passwords are shared to vendors. Vendors also benefit from Veracross'' existing security infrastructure.
+
+    - _History_: All logins via OAuth SSO are tracked in the Login Log.'
+  contact:
+    name: Veracross
+    url: https://www.veracross.com/api
+servers:
+- url: https://accounts.veracross.com/{school_route}
+  description: Authorization Base URL
+tags:
+- name: OAuth
+paths:
+  /oauth/introspect:
+    post:
+      tags:
+      - OAuth
+      summary: Token Introspection
+      description: 'The Token Introspection extension defines a mechanism for resource servers to obtain information about access tokens. With this spec, resource servers can check the validity of access tokens, and find out other information such as which user and which scopes are associated with the token.
+
+
+        #### Endpoint applies to:
+
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ✅ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ✅ |
+
+
+        #### Related links
+
+        - https://tools.ietf.org/html/rfc7662
+
+        - https://www.oauth.com/oauth2-servers/token-introspection-endpoint/
+
+        - https://oauth.net/2/token-introspection/'
+      operationId: post-oauth-introspect
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                token:
+                  type: string
+              required:
+              - client_id
+              - client_secret
+              - token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                  scope:
+                    type: string
+                  client_id:
+                    type:
+                    - string
+                    - 'null'
+                    description: null when used on token issued with authorization_code as grant_type
+                  token_type:
+                    type: string
+                  exp:
+                    type: integer
+                  iat:
+                    type: integer
+                required:
+                - active
+              examples:
+              - key: With valid access token
+                value:
+                  active: true
+                  scope: example.object:list another.thing:create
+                  client_id: null
+                  token_type: Bearer
+                  exp: 1600821466
+                  iat: 1600817866
+              - key: With invalid token
+                value:
+                  active: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: An error code
+                  error_description:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_description
+              examples:
+              - key: Error Example
+                value:
+                  error: invalid_client
+                  error_description: The requested client id is unknown or unauthorized.
+                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
+                summary: Invalid Client
+        '415':
+          description: 'Unsupported media type.
+
+            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: UnsupportedMediaType
+                value: {}
+  /oauth/discovery/keys:
+    get:
+      tags:
+      - OIDC
+      summary: JSON Web Key Set (JWKS)
+      description: 'The JSON Web Key Set (JWKS) endpoint returns the public keys used to verify JSON Web Tokens (JWTs) issued by the authorization server.
+
+        This endpoint is commonly used in OpenID Connect 1.0 (OIDC) flows to verify the authenticity and integrity of ID tokens.
+
+
+        #### Related links
+
+        - https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata
+
+        - https://www.rfc-editor.org/rfc/rfc7517.html
+
+        - https://datatracker.ietf.org/doc/html/rfc7518
+
+        - https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationExamples'
+      operationId: jwks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        kty:
+                          type: string
+                          description: Key type parameter identifies the cryptographic algorithm family used with the key, such as "RSA" or "EC"
+                        n:
+                          type: string
+                          description: Modulus parameter of the RSA public key
+                        e:
+                          type: string
+                          description: Exponent parameter of the RSA public key
+                        kid:
+                          type: string
+                          description: Key ID parameter is used to match a specific key. It is typically used to identify the key in a set of keys
+                        use:
+                          type: string
+                          description: Intended use of the public key, such as "sig" for signature or "enc" for encryption
+                          enum:
+                          - sig
+                          - enc
+                        alg:
+                          type: string
+                          description: Algorithm intended for use with the key, such as "RS256" for RSA SHA-256
+                      required:
+                      - kty
+                      - kid
+                      - use
+                      - alg
+                required:
+                - keys
+              examples:
+              - key: Success
+                value:
+                  keys:
+                  - kty: RSA
+                    n: y0ur_modulus_h3r3
+                    e: AQAB
+                    kid: y0ur_key_id_h3r3
+                    use: sig
+                    alg: RS256
+  /.well-known/openid-configuration:
+    get:
+      tags:
+      - OIDC
+      summary: OpenID Provider Configuration
+      description: 'The OpenID Provider Configuration endpoint provides metadata about the OpenID Provider (OP). This metadata includes information such as the issuer identifier, authorization endpoint, token endpoint, userinfo endpoint, and supported scopes and claims.
+
+
+        Clients can use this metadata to dynamically configure themselves to interact with the OP without requiring manual configuration.
+
+
+        #### Related links
+
+        - https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationRequest
+
+        - https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata'
+      operationId: openid-configuration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    description: Issuer URL
+                  authorization_endpoint:
+                    type: string
+                    description: Authorization endpoint URL
+                  token_endpoint:
+                    type: string
+                    description: Token endpoint URL
+                  revocation_endpoint:
+                    type: string
+                    description: Revocation endpoint URL
+                  introspection_endpoint:
+                    type: string
+                    description: Introspection endpoint URL
+                  userinfo_endpoint:
+                    type: string
+                    description: User Info endpoint URL
+                  jwks_uri:
+                    type: string
+                    description: JWKS endpoint URL
+                  scopes_supported:
+                    type: array
+                    description: List of supported scopes (this might not be an exhaustive list)
+                    items:
+                      type: string
+                  response_types_supported:
+                    type: array
+                    description: List of supported OAuth2 `response_type` values
+                    items:
+                      type: string
+                  response_modes_supported:
+                    type: array
+                    description: List of supported Oauth2 `response_mode` values
+                    items:
+                      type: string
+                  grant_types_supported:
+                    type: array
+                    description: List of supported OAuth2 `grant_type` values
+                    items:
+                      type: string
+                  token_endpoint_auth_methods_supported:
+                    type: array
+                    description: List of supported OAuth2 Client Authentication methods in the token endpoint
+                    items:
+                      type: string
+                  subject_types_supported:
+                    type: array
+                    description: List of supported Subject Identifier types
+                    items:
+                      type: string
+                  id_token_signing_alg_values_supported:
+                    type: array
+                    description: List of supported JWS signing algorithms (`alg` values) for the ID token
+                    items:
+                      type: string
+                  claim_types_supported:
+                    type: array
+                    description: List of supported Claim Types
+                    items:
+                      type: string
+                  claims_supported:
+                    type: array
+                    description: List of supported Claim Names we MAY be able to supply values for (this might not be an exhaustive list)
+                    items:
+                      type: string
+                required:
+                - issuer
+                - authorization_endpoint
+                - token_endpoint
+                - jwks_uri
+                - response_types_supported
+                - subject_types_supported
+                - id_token_signing_alg_values_supported
+              examples:
+              - key: Success
+                value:
+                  issuer: http://accounts.veracross.com/your-school
+                  authorization_endpoint: http://accounts.veracross.com/your-school/oauth/authorize
+                  token_endpoint: http://accounts.veracross.com/your-school/oauth/token
+                  revocation_endpoint: http://accounts.veracross.com/your-school/oauth/revoke
+                  introspection_endpoint: http://accounts.veracross.com/your-school/oauth/instrospect
+                  userinfo_endpoint: http://accounts.veracross.com/your-school/oauth/userinfo
+                  jwks_uri: http://accounts.veracross.com/your-school/oauth/discovery/keys
+                  scopes_supported:
+                  - openid
+                  response_types_supported:
+                  - code
+                  response_modes_supported:
+                  - query
+                  - fragment
+                  - form_post
+                  grant_types_supported:
+                  - authorization_code
+                  - client_credentials
+                  - refresh_token
+                  token_endpoint_auth_methods_supported:
+                  - client_secret_post
+                  subject_types_supported:
+                  - public
+                  id_token_signing_alg_values_supported:
+                  - RS256
+                  claim_types_supported:
+                  - normal
+                  claims_supported:
+                  - iss
+                  - sub
+                  - aud
+                  - exp
+                  - iat
+                  - preferred_username
+                  - email
+                  - roles
+  /oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Create Access Token
+      description: 'All requests to the Data API must be made with an access token. Review [Access Tokens](../../../../docs/concepts/access-tokens.md) for additional details.
+
+
+        #### Endpoint applies to:
+
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ✅ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ✅ |
+
+
+        #### Related links
+
+        - https://tools.ietf.org/html/rfc6749#section-3.2
+
+        - https://www.oauth.com/oauth2-servers/accessing-data/obtaining-an-access-token/
+
+        - https://www.oauth.com/oauth2-servers/making-authenticated-requests/refreshing-an-access-token/'
+      operationId: create-access-token
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  - authorization_code
+                  - refresh_token
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                  description: required for all grant types. Treat the client_secret as confidential.
+                scope:
+                  type: string
+                  description: list of scopes for this access token
+                code:
+                  type: string
+                  description: required only for authorization_code as grant_type
+                redirect_uri:
+                  type: string
+                  description: required only for authorization_code as grant_type
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+            examples:
+            - key: Client Credentials
+              value:
+                grant_type: client_credentials
+                client_id: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4c
+                client_secret: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                scope: example.object:list another.thing:create
+            - key: Authorization Code
+              value:
+                grant_type: authorization_code
+                client_id: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4c
+                client_secret: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                scope: sso
+                code: c0d3c0d3c0d3c0d3c0d3c0d3c0d3c0d3
+            - key: Refresh Token
+              value:
+                grant_type: refresh_token
+                client_id: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4c
+                client_secret: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                refresh_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  created_at:
+                    type: number
+                  expires_in:
+                    type: number
+                  scope:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                  id_token:
+                    type: string
+                    description: JWT string returned only with the Authorization Code grant type when the `openid` scope is requested. The JWT contains the user info (equivalent to the User Info endpoint). The JWT's signature may be verified using the public key provided by the JWKS endpoint.
+                required:
+                - access_token
+                - created_at
+                - expires_in
+                - scope
+                - token_type
+              examples:
+              - key: Client Credentials
+                value:
+                  access_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  created_at: 1599229410
+                  expires_in: 3600
+                  scope: example.object:list another.thing:create
+                  token_type: Bearer
+              - key: Authorization Code with `sso` scope
+                value:
+                  access_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  created_at: 1599229410
+                  expires_in: 3600
+                  refresh_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  scope: sso example.object:list another.thing:create
+                  token_type: Bearer
+              - key: Authorization Code with `openid` scope
+                value:
+                  access_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  created_at: 1599229410
+                  expires_in: 3600
+                  refresh_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  scope: openid example.object:list another.thing:create
+                  id_token: JwT0k3nJwT0k3nJwT0k3n.JwT0k3nJwT0k3nJwT0k3nJwT0k3nJwT0k3nJwT0k3n.JwT0k3nJwT0k3nJwT0k3n
+                  token_type: Bearer
+              - key: Refresh Token
+                value:
+                  access_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  created_at: 1599229410
+                  expires_in: 3600
+                  refresh_token: v3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv3r4cr0ssv
+                  scope: example.object:list another.thing:create
+                  token_type: Bearer
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: An error code
+                  error_description:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_description
+              examples:
+              - key: Error Example
+                value:
+                  error: invalid_request
+                  error_description: 'Missing required parameter: grant_type.'
+                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: An error code
+                  error_description:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_description
+              examples:
+              - key: Error Example
+                value:
+                  error: invalid_client
+                  error_description: The requested client id is unknown or unauthorized.
+                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
+                summary: Invalid Client
+        '415':
+          description: 'Unsupported media type.
+
+            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: UnsupportedMediaType
+                value: {}
+  /oauth/revoke:
+    post:
+      tags:
+      - OAuth
+      summary: Revoke Token
+      description: 'Post with client credentials to revoke an access token. The authorization server responds with HTTP status code 200 if the token has been revoked successfully or if the client submitted an invalid token.
+
+
+        <!-- theme: warning -->
+
+        > Note: per the OAuth spec, attempting to revoke an invalid token has no effect.
+
+
+        The content of the response body should be ignored by the client as all necessary information is conveyed in the response code.
+
+
+        A revoked token can no longer be used for any other endpoint. The response codes/bodies may vary depending on the endpoint. For example, Token Info (`GET /oauth/token/info`) returns `401 Unauthorized`, whereas Token Introspection (`POST /oauth/introspect`) still returns `200 OK`, but `active: false` in the body.
+
+
+        #### Endpoint applies to:
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ✅ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ✅ |
+
+
+        #### Related links
+
+        - https://tools.ietf.org/html/rfc7009
+
+        - https://www.oauth.com/oauth2-servers/listing-authorizations/revoking-access/
+
+        - https://oauth.net/2/token-revocation/
+
+        '
+      operationId: post-oauth-revoke
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                token:
+                  type: string
+              required:
+              - client_id
+              - client_secret
+              - token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: Success
+                value: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: An error code
+                  error_description:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_description
+              examples:
+              - key: Error Example
+                value:
+                  error: invalid_client
+                  error_description: The requested client id is unknown or unauthorized.
+                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
+                summary: Invalid Client
+        '415':
+          description: 'Unsupported media type.
+
+            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: UnsupportedMediaType
+                value: {}
+  /oauth/authorize:
+    get:
+      tags:
+      - OAuth
+      summary: Authorize
+      description: 'This endpoint starts the OAuth SSO flow. The response is an HTML page intended for humans (in contrast to other endpoints, which are intended for servers). Users can log in to a vendor site with their existing Veracross account.
+
+
+        <!--
+
+        focus: false
+
+        -->
+
+        ![A Veracross login page](https://assets.veracross.com/_documentation/api/images/vc-login-page.png)
+
+
+        As a vendor, you need to formulate this URL with the proper parameters:
+
+        1. The `client_id` string that identifies your site as a Veracross OAuth Application.
+
+        2. One of the already registered `redirect_uri` that Veracross will redirect users to upon successful login (remember, this value should be URL encoded in the request).
+
+        3. `response_type=code`, which means that upon successful login, Veracross systems will also give you an **authorization code** that you will use to exchange for an **access token** to use with subsequent requests.
+
+        4. The `scope`, which specifies a list of scopes, separated by spaces, for the scopes for which you want to authorize the user, for example `scope = sso`.
+
+
+        > Note: Using SSO requires having an OAuth Application [registered at each school](https://community.veracross.com/s/article/Creating-an-OAuth-Application-School-Workflow). Vendors must provide the `redirect_uri`s and `scope`s they require, and will receive the corresponding OAuth `client_id` and `client_secret` values.
+
+
+        Unlike most public OAuth implementations (eg, "Log In with Facebook", "Log In with Google", etc), Veracross users won''t see a separate "approval" screen when logging in. This is intentional; at Veracross, SSO to a vendor site is pre-approved with the set up of the OAuth Application by an administrator, and no separate approval from end users is necessary.
+
+
+        #### Endpoint applies to:
+
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ❌ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ❌ |
+
+
+        #### Related links:
+
+        - https://tools.ietf.org/html/rfc6749#section-3.1
+
+        - https://www.oauth.com/oauth2-servers/accessing-data/authorization-request/'
+      operationId: get-oauth-authorize
+      parameters:
+      - name: client_id
+        in: query
+        description: This is the client_id from your OAuth Application. It will be different for each school that you work with.
+        required: true
+        schema:
+          type: string
+      - name: redirect_uri
+        in: query
+        description: 'Veracross will redirect to this URI upon successful login. It needs to be URL encoded, HTTPS, and registered on your OAuth Application.
+
+
+          It redirects with the `code` parameter which will be exchanged for the `access_token`.'
+        required: true
+        schema:
+          type: string
+      - name: response_type
+        in: query
+        description: Needs to be `code`
+        required: true
+        schema:
+          type: string
+      - name: scope
+        in: query
+        description: List of requested scopes (separated by spaces). To complete SSO, the `sso` scope must be requested. All requested scopes must already be enabled by the school on your OAuth Application.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Responds HTML with Veracross login form if the browser isn't authorized yet. Otherwise it goes directly to the `redirect_uri`
+  /oauth/userinfo:
+    get:
+      tags:
+      - OAuth
+      - OIDC
+      summary: User Info
+      description: 'The access token is used to retrieve info about the user that has logged in, such as their Veracross Account ID and username.
+
+
+        > Note: `sub` is the internal account id, and uniquely identifies a user at a school. It must be combined with the school route to become globally unique. For example, different users at different schools might have the same `sub` value. Also note that schools may configure their own format for `preferred_username`, so it should only be used for display purposes (eg, some schools use email, some schools use other id''s, etc)
+
+
+        #### Endpoint applies to:
+
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ❌ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ❌ |
+
+
+        #### Related links
+
+        - https://www.oauth.com/oauth2-servers/signing-in-with-google/verifying-the-user-info/
+
+        - https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+
+        - https://community.veracross.com/s/article/Person-Role-Definitions'
+      operationId: get-oauth-userinfo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sub:
+                    type: string
+                  preferred_username:
+                    type: string
+                  email:
+                    type:
+                    - string
+                    - 'null'
+                  roles:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                required:
+                - sub
+                - preferred_username
+              examples:
+              - key: Success
+                value:
+                  sub: '1234'
+                  preferred_username: john.doe
+                  email: john.doe@example.com
+                  roles:
+                  - Parent
+                  - Coach
+                  - Staff
+                  - Faculty
+                  - Donor
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+              - key: Unauthorized
+                value: ''
+        '403':
+          description: 'Forbidden.
+
+            This happens when the access token lacks a required scope.'
+        '404':
+          description: 'Not Found.
+
+            There was no user associated with the provided access token. This can happen if the request uses an access token created with the Client Credentials grant type; since those exist apart from an individual user identity, there''s no user info that can be provided. User info requests should only be made with Authorization Code access tokens.'
+        '415':
+          description: 'Unsupported media type.
+
+            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: UnsupportedMediaType
+                value: {}
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: An error code
+        error_description:
+          type: string
+          description: The description of the error
+        error_id:
+          type: string
+          description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+      required:
+      - error
+      - error_description
+    EmptyObject:
+      type: object
+      properties: {}

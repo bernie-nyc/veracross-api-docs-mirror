@@ -1,0 +1,1166 @@
+openapi: 3.0.0
+info:
+  title: Files API
+  version: 3.0.0
+  description: Please visit [Using the Files API](../docs/guides/making-a-files-api-request.md) to get started
+  contact:
+    name: Veracross
+    url: https://www.veracross.com/api
+servers:
+- url: https://api.veracross.com/{school_route}/v3/files
+  description: Base URL
+tags:
+- name: 'Admissions: Applicant Files'
+- name: 'Finance: AP Invoice Files'
+- name: Person Photo
+paths:
+  /ap_invoices/{invoice_id}/files:
+    get:
+      tags:
+      - 'Finance: AP Invoice Files'
+      summary: 'List Finance: AP Invoice Files'
+      operationId: list_finance_ap_invoice_files
+      parameters:
+      - name: invoice_id
+        in: path
+        description: Record ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoice_id:
+                          type: integer
+                          description: Record ID
+                        invoice_number:
+                          type: string
+                          description: Invoice Number
+                          maxLength: 30
+                        name:
+                          type: string
+                          description: Name
+                          maxLength: 1000
+                        description:
+                          type: string
+                          description: Description (Text)
+                          maxLength: 1000
+                        notes:
+                          type: string
+                          description: Notes
+                        download_url:
+                          type: string
+                          description: File Download
+                          readOnly: true
+                      required:
+                      - invoice_id
+                      - invoice_number
+                      - name
+                      - id
+                      - description
+                      - notes
+                      - download_url
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                    maxItems: 0
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:ap_invoices.files:list
+    post:
+      tags:
+      - 'Finance: AP Invoice Files'
+      summary: 'Create Finance: AP Invoice Files'
+      operationId: create_finance_ap_invoice_files
+      parameters:
+      - name: invoice_id
+        in: path
+        description: Record ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    invoice_id:
+                      type: integer
+                      description: Record ID
+                    invoice_number:
+                      type: string
+                      description: Invoice Number
+                      maxLength: 30
+                    name:
+                      type: string
+                      description: Name
+                      maxLength: 1000
+                    description:
+                      type: string
+                      description: Description (Text)
+                      maxLength: 1000
+                    notes:
+                      type: string
+                      description: Notes
+                    download_url:
+                      type: string
+                      description: File Download
+                      readOnly: true
+                  required:
+                  - invoice_number
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                  upload_url:
+                    type: string
+                    description: '- Make request using PUT method
+
+                      - Provide raw file in request body (not multipart/form-data)
+
+                      - URL accepts one upload only; reusing it is rejected
+
+                      - Expires after 5 minutes
+
+                      - Allowed file types: `text/csv`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `image/gif`, `image/jpeg`, `application/pdf`, `image/png`, `application/vnd.ms-powerpoint`, `application/vnd.openxmlformats-officedocument.presentationml.presentation`, `text/plain`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/zip`
+
+                      - Max file size: 100 MB
+
+                      '
+                required:
+                - data
+                - upload_url
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:ap_invoices.files:create
+  /ap_invoices/{invoice_id}/files/{id}:
+    get:
+      tags:
+      - 'Finance: AP Invoice Files'
+      summary: 'Read Finance: AP Invoice Files'
+      operationId: read_finance_ap_invoice_files
+      parameters:
+      - name: invoice_id
+        in: path
+        description: Record ID
+        required: true
+        schema:
+          type: integer
+      - name: id
+        in: path
+        description: File ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      invoice_id:
+                        type: integer
+                        description: Record ID
+                      invoice_number:
+                        type: string
+                        description: Invoice Number
+                        maxLength: 30
+                      name:
+                        type: string
+                        description: Name
+                        maxLength: 1000
+                      description:
+                        type: string
+                        description: Description (Text)
+                        maxLength: 1000
+                      notes:
+                        type: string
+                        description: Notes
+                      download_url:
+                        type: string
+                        description: File Download
+                        readOnly: true
+                    required:
+                    - invoice_id
+                    - invoice_number
+                    - name
+                    - id
+                    - description
+                    - notes
+                    - download_url
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                    maxItems: 0
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:ap_invoices.files:read
+    delete:
+      tags:
+      - 'Finance: AP Invoice Files'
+      summary: 'Delete Finance: AP Invoice Files'
+      operationId: delete_finance_ap_invoice_files
+      parameters:
+      - name: invoice_id
+        in: path
+        description: Record ID
+        required: true
+        schema:
+          type: integer
+      - name: id
+        in: path
+        description: File ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:ap_invoices.files:delete
+  /person_photo/{id}:
+    get:
+      tags:
+      - Person Photo
+      summary: Read Person Photo
+      operationId: read_person_photo
+      parameters:
+      - name: id
+        in: path
+        description: File ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      person_id:
+                        type: integer
+                        description: Person ID
+                      status:
+                        type: integer
+                        description: API Upload Status
+                      error:
+                        type: string
+                        description: API Upload Error
+                      download_url:
+                        type: string
+                        description: 'Person Photo URL/W Expiration
+
+
+                          This URL is private and expires 24 hours after the API request is completed.'
+                        readOnly: true
+                      notes:
+                        type: string
+                        description: Notes
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                    required:
+                    - id
+                    - person_id
+                    - status
+                    - error
+                    - download_url
+                    - notes
+                    - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - status
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:person_photo:read
+  /applicant_file:
+    get:
+      tags:
+      - 'Admissions: Applicant Files'
+      summary: 'List Admissions: Applicant Files'
+      operationId: list_admissions_applicant_files
+      parameters:
+      - name: person_id
+        in: query
+        description: Person ID
+        schema:
+          type: integer
+      - name: year_applying_for
+        in: query
+        description: 'Year Applying For
+
+
+          Person Year Applying For'
+        schema:
+          type: integer
+      - name: school_year
+        in: query
+        description: School Year
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        person_id:
+                          type: integer
+                          description: Person ID
+                        status:
+                          type: integer
+                          description: API Upload Status
+                        error:
+                          type: string
+                          description: API Upload Error
+                        description:
+                          type: string
+                          description: Description (Text)
+                          maxLength: 1000
+                        classification:
+                          type: string
+                          description: Classification
+                        year_applying_for:
+                          type: integer
+                          description: 'Year Applying For
+
+
+                            Person Year Applying For'
+                        school_year:
+                          type: integer
+                          description: School Year
+                        notes:
+                          type: string
+                          description: Notes
+                        download_url:
+                          type: string
+                          description: Applicant File Download
+                          readOnly: true
+                      required:
+                      - id
+                      - person_id
+                      - status
+                      - error
+                      - description
+                      - classification
+                      - year_applying_for
+                      - school_year
+                      - notes
+                      - download_url
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - status
+                            - year_applying_for
+                            - school_year
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:applicant_file:list
+    post:
+      tags:
+      - 'Admissions: Applicant Files'
+      summary: 'Create Admissions: Applicant Files'
+      operationId: create_admissions_applicant_files
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    person_id:
+                      type: integer
+                      description: Person ID
+                    description:
+                      type: string
+                      description: Description (Text)
+                      maxLength: 1000
+                    classification:
+                      type: string
+                      description: Classification
+                    year_applying_for:
+                      type: integer
+                      description: 'Year Applying For
+
+
+                        Person Year Applying For'
+                    school_year:
+                      type: integer
+                      description: School Year
+                    notes:
+                      type: string
+                      description: Notes
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                  upload_url:
+                    type: string
+                    description: '- Make request using PUT method
+
+                      - Provide raw file in request body (not multipart/form-data)
+
+                      - URL accepts one upload only; reusing it is rejected
+
+                      - Expires after 5 minutes
+
+                      - Allowed file types: `text/csv`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `image/gif`, `image/jpeg`, `application/pdf`, `image/png`, `application/vnd.ms-powerpoint`, `application/vnd.openxmlformats-officedocument.presentationml.presentation`, `text/plain`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/zip`
+
+                      - Max file size: 10 MB
+
+                      '
+                required:
+                - data
+                - upload_url
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:applicant_file:create
+  /applicant_file/{id}:
+    get:
+      tags:
+      - 'Admissions: Applicant Files'
+      summary: 'Read Admissions: Applicant Files'
+      operationId: read_admissions_applicant_files
+      parameters:
+      - name: id
+        in: path
+        description: File ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      person_id:
+                        type: integer
+                        description: Person ID
+                      status:
+                        type: integer
+                        description: API Upload Status
+                      error:
+                        type: string
+                        description: API Upload Error
+                      description:
+                        type: string
+                        description: Description (Text)
+                        maxLength: 1000
+                      classification:
+                        type: string
+                        description: Classification
+                      year_applying_for:
+                        type: integer
+                        description: 'Year Applying For
+
+
+                          Person Year Applying For'
+                      school_year:
+                        type: integer
+                        description: School Year
+                      notes:
+                        type: string
+                        description: Notes
+                      download_url:
+                        type: string
+                        description: Applicant File Download
+                        readOnly: true
+                    required:
+                    - id
+                    - person_id
+                    - status
+                    - error
+                    - description
+                    - classification
+                    - year_applying_for
+                    - school_year
+                    - notes
+                    - download_url
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - status
+                            - year_applying_for
+                            - school_year
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:applicant_file:read
+  /person_photo:
+    post:
+      tags:
+      - Person Photo
+      summary: Create Person Photo
+      operationId: create_person_photo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    person_id:
+                      type: integer
+                      description: Person ID
+                    notes:
+                      type: string
+                      description: Notes
+                  required:
+                  - person_id
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                  upload_url:
+                    type: string
+                    description: '- Make request using PUT method
+
+                      - Provide raw file in request body (not multipart/form-data)
+
+                      - URL accepts one upload only; reusing it is rejected
+
+                      - Expires after 5 minutes
+
+                      - Allowed file types: `image/jpg`, `image/jpeg`, `image/png`, `image/gif`
+
+                      - Max file size: 2 MB
+
+                      '
+                required:
+                - data
+                - upload_url
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - files:person_photo:create
+components:
+  securitySchemes:
+    access_token:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            files:applicant_file:create: 'Create Admissions: Applicant Files'
+            files:applicant_file:list: 'List Admissions: Applicant Files'
+            files:applicant_file:read: 'Read Admissions: Applicant Files'
+            files:ap_invoices.files:create: 'Create Finance: AP Invoice Files'
+            files:ap_invoices.files:delete: 'Delete Finance: AP Invoice Files'
+            files:ap_invoices.files:list: 'List Finance: AP Invoice Files'
+            files:ap_invoices.files:read: 'Read Finance: AP Invoice Files'
+            files:person_photo:create: Create Person Photo
+            files:person_photo:read: Read Person Photo
+          tokenUrl: https://accounts.veracross.com/{school_route}/oauth/token
+  schemas:
+    error:
+      type: object
+      description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+      properties:
+        error:
+          type: string
+          description: The description of the error
+        error_id:
+          type: string
+          description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+      required:
+      - error
+      - error_id
+    post:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: {}
+          required:
+          - id
+      required:
+      - data

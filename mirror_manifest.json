@@ -1,0 +1,178 @@
+{
+  "source": "https://api-docs.veracross.com",
+  "workspace_slug": "veracross",
+  "workspace_id": 8075,
+  "node_count": 576,
+  "fetched": 576,
+  "errors": [],
+  "articles": [
+    {
+      "path": "docs/errors.md",
+      "title": "Errors",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjEzMTIxNQ/nodes/r7ch4onat59mk"
+    },
+    {
+      "path": "docs/using-the-oneroster-api.md",
+      "title": "Using the OneRoster API",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjEzMTIxNQ/nodes/bd08d5lpygdl1"
+    },
+    {
+      "path": "docs/general-principals.md",
+      "title": "General Principals",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjEzMTIxNQ/nodes/mlexxa72zjjcm"
+    },
+    {
+      "path": "docs/access-tokens.md",
+      "title": "Access Tokens",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjEzMTIxNQ/nodes/pnlrcay2wklgy"
+    },
+    {
+      "path": "docs/support.md",
+      "title": "Support",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjEzMTIxNQ/nodes/l8qgn27w9qtcn"
+    },
+    {
+      "path": "docs/guides/making-a-data-api-request.md",
+      "title": "Making a Data API Request",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/8f8619229c0c4"
+    },
+    {
+      "path": "docs/guides/making-a-files-api-request.md",
+      "title": "Making a Files API request",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/b6e83e47f9c80"
+    },
+    {
+      "path": "docs/changelogs/Authorization-API.full.md",
+      "title": "Authorization API - Full Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/b50fe9398a454"
+    },
+    {
+      "path": "docs/concepts/general-principles.md",
+      "title": "General Principles",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/fd2d3c39fa28f"
+    },
+    {
+      "path": "docs/diagrams/api-request.md",
+      "title": "Diagram: API Request",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjM2NTM3MTQ1"
+    },
+    {
+      "path": "docs/guides/integrating-with-admission-endpoints.md",
+      "title": "Integrating with Admission Endpoints",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjIzNDQ1MDcx"
+    },
+    {
+      "path": "docs/diagrams/oauth-sso-login-flow.md",
+      "title": "Diagram: OAuth SSO Login Flow",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/6ceadcca9ad7f"
+    },
+    {
+      "path": "docs/concepts/breaking-changes-policy.md",
+      "title": "Breaking Changes Policy",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxNzg"
+    },
+    {
+      "path": "docs/concepts/value-lists.md",
+      "title": "Value Lists",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODM"
+    },
+    {
+      "path": "docs/guides/student-logistics-requests.md",
+      "title": "Student Logistics Requests",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODQ"
+    },
+    {
+      "path": "docs/concepts/pagination.md",
+      "title": "Pagination",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODE"
+    },
+    {
+      "path": "docs/concepts/using-the-data-api.md",
+      "title": "Using the Data API",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/cd9d140be5811"
+    },
+    {
+      "path": "docs/concepts/errors.md",
+      "title": "Errors",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/afd1ea8c94b3f"
+    },
+    {
+      "path": "docs/concepts/rate-limiting.md",
+      "title": "Rate Limiting",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/87c4e0dc5e47b"
+    },
+    {
+      "path": "docs/changelogs/Authorization-API.recent.md",
+      "title": "Authorization API - Recent Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/5d3497c68e82c"
+    },
+    {
+      "path": "docs/changelogs/Files-API.full.md",
+      "title": "Files API - Full Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/16da2460337a2"
+    },
+    {
+      "path": "docs/changelogs/Files-API.recent.md",
+      "title": "Files API - Recent Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/7b26f8fa147e2"
+    },
+    {
+      "path": "docs/changelogs/Data-API.full.md",
+      "title": "Data API - Full Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ed84457d05c15"
+    },
+    {
+      "path": "docs/changelogs/Data-API.recent.md",
+      "title": "Data API - Recent Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/893243dd5690d"
+    },
+    {
+      "path": "docs/guides/creating-an-sso-integration.md",
+      "title": "Creating an SSO Integration",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/5fb9f96bc480a"
+    },
+    {
+      "path": "docs/concepts/access-tokens.md",
+      "title": "Access Tokens",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/097f6c769cafb"
+    }
+  ],
+  "specs": [
+    {
+      "path": "reference/OneRoster-Rostering.yaml",
+      "operations": 56,
+      "missing_ops": 0,
+      "models": 2,
+      "paths": 56
+    },
+    {
+      "path": "reference/OneRoster-Gradebook.yaml",
+      "operations": 23,
+      "missing_ops": 0,
+      "models": 2,
+      "paths": 14
+    },
+    {
+      "path": "reference/Authorization-API.yaml",
+      "operations": 7,
+      "missing_ops": 0,
+      "models": 2,
+      "paths": 7
+    },
+    {
+      "path": "reference/Data-API.yaml",
+      "operations": 440,
+      "missing_ops": 0,
+      "models": 2,
+      "paths": 303
+    },
+    {
+      "path": "reference/Files-API.yaml",
+      "operations": 9,
+      "missing_ops": 0,
+      "models": 2,
+      "paths": 6
+    }
+  ],
+  "generated_at": "2026-10-03T20:54:47Z"
+}
