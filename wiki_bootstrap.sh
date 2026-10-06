@@ -28,19 +28,22 @@ if ! git ls-remote "https://github.com/$REPO.wiki.git" >/dev/null 2>&1; then
 fi
 echo "✓ wiki git repo is live"
 
-# 2) clone the (now-existing) wiki repo
+# 2) clone the (now-existing) wiki repo.
+#    IMPORTANT: GitHub renders the wiki from its DEFAULT branch, which is `master`
+#    (NOT `gh-pages`). Pushing to gh-pages leaves the wiki showing only the
+#    placeholder Home page. So we force-push to master.
 rm -rf /tmp/wiki_push
 git clone -q "https://github.com/$REPO.wiki.git" /tmp/wiki_push
 cd /tmp/wiki_push
-git checkout -B gh-pages 2>/dev/null || git checkout -b gh-pages
+git checkout -q -B master origin/master 2>/dev/null || git checkout -q -B master
 
-# 3) replace contents with the mirrored pages
+# 3) replace ALL contents with the mirrored pages
 find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 tar -xf "$TARBALL" -C .
 
-# 4) commit + push
+# 4) commit + force-push to the wiki's default branch (master)
 git add -A
 git -c user.email="bernie-nyc@users.noreply.github.com" -c user.name="bernie-nyc" \
-  commit -qm "Mirror Veracross API docs left menu as nested wiki pages (484)"
-git push origin gh-pages
-echo "✓ pushed. Wiki live at https://github.com/$REPO/wiki"
+  commit -qm "Mirror Veracross API docs left menu as wiki pages (484, flat links)"
+git push -f origin master
+echo "✓ pushed to master. Wiki live at https://github.com/$REPO/wiki"
