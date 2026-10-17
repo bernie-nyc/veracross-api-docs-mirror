@@ -2,8 +2,8 @@
   "source": "https://api-docs.veracross.com",
   "workspace_slug": "veracross",
   "workspace_id": 8075,
-  "node_count": 576,
-  "fetched": 576,
+  "node_count": 577,
+  "fetched": 577,
   "errors": [],
   "articles": [
     {
@@ -161,7 +161,7 @@
     },
     {
       "path": "reference/Data-API.yaml",
-      "operations": 440,
+      "operations": 441,
       "missing_ops": 0,
       "models": 2,
       "paths": 303
@@ -174,5 +174,5 @@
       "paths": 6
     }
   ],
-  "generated_at": "2026-10-03T20:54:47Z"
+  "generated_at": "2026-10-17T12:57:33Z"
 }

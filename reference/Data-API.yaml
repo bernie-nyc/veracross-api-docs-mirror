@@ -623,6 +623,127 @@ paths:
       security:
       - access_token:
         - person_accounts:delete
+    patch:
+      tags:
+      - Person Accounts
+      summary: Update Person Accounts
+      operationId: update_person_accounts
+      parameters:
+      - name: id
+        in: path
+        description: 'Person ID
+
+
+          A person record must exist before creating a user account for the person record.'
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    person_id:
+                      type: integer
+                      description: 'Person ID
+
+
+                        A person record must exist before creating a user account for the person record.'
+                      readOnly: true
+                    username:
+                      type: string
+                      description: Username
+                      maxLength: 128
+                    external_username:
+                      type: string
+                      description: 'External Username
+
+
+                        The username in your external login provider. If you are not using an external provider, leave blank and the system will generate a username for the user based on username configuration set up in Axiom.'
+                      readOnly: true
+                      maxLength: 255
+                    account_type:
+                      type: integer
+                      description: Account Type
+                      readOnly: true
+                    status:
+                      type: integer
+                      description: 'Account Status
+
+
+                        For Veracross accounts without associated external accounts.'
+                    mfa_status:
+                      type: integer
+                      description: MFA Status
+                    primary_portal:
+                      type: string
+                      description: Primary Portal
+                      readOnly: true
+                      maxLength: 200
+                    security_roles:
+                      type: string
+                      description: Security Roles
+                      readOnly: true
+                    last_login_date:
+                      type: string
+                      format: date-time
+                      description: 'Last Login Date
+
+
+                        The last time this user successfully logged in to Veracross (excludes impersonated logins).'
+                      readOnly: true
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - person_accounts:update
     get:
       tags:
       - Person Accounts
@@ -661,6 +782,7 @@ paths:
 
 
                           A person record must exist before creating a user account for the person record.'
+                        readOnly: true
                       username:
                         type: string
                         description: Username
@@ -671,20 +793,26 @@ paths:
 
 
                           The username in your external login provider. If you are not using an external provider, leave blank and the system will generate a username for the user based on username configuration set up in Axiom.'
+                        readOnly: true
                         maxLength: 255
                       account_type:
                         type: integer
                         description: Account Type
-                      primary_portal:
-                        type: string
-                        description: Primary Portal
-                        maxLength: 200
+                        readOnly: true
                       status:
                         type: integer
                         description: 'Account Status
 
 
                           For Veracross accounts without associated external accounts.'
+                      mfa_status:
+                        type: integer
+                        description: MFA Status
+                      primary_portal:
+                        type: string
+                        description: Primary Portal
+                        readOnly: true
+                        maxLength: 200
                       security_roles:
                         type: string
                         description: Security Roles
@@ -702,8 +830,9 @@ paths:
                     - username
                     - external_username
                     - account_type
-                    - primary_portal
                     - status
+                    - mfa_status
+                    - primary_portal
                     - security_roles
                     - last_login_date
                   value_lists:
@@ -721,6 +850,7 @@ paths:
                             enum:
                             - account_type
                             - status
+                            - mfa_status
                             - role
                         items:
                           type: array
@@ -2344,6 +2474,13 @@ paths:
                           type: boolean
                           description: Has Multiple Resources?
                           readOnly: true
+                        internal_location_resource_description:
+                          type: string
+                          description: 'Internal Location Resource Description
+
+
+                            The description of the internal resource for this event.'
+                          readOnly: true
                       required:
                       - id
                       - description
@@ -2398,6 +2535,7 @@ paths:
                       - internal_location_resource_id
                       - venue_departure_time
                       - has_multiple_resources
+                      - internal_location_resource_description
                   value_lists:
                     type: array
                     description: Present only with header `X-API-Value-Lists = include`
@@ -2723,6 +2861,13 @@ paths:
                     has_multiple_resources:
                       type: boolean
                       description: Has Multiple Resources?
+                      readOnly: true
+                    internal_location_resource_description:
+                      type: string
+                      description: 'Internal Location Resource Description
+
+
+                        The description of the internal resource for this event.'
                       readOnly: true
                   required:
                   - event_type_id
@@ -7705,19 +7850,13 @@ paths:
           type: integer
       - name: on_or_after_start_date
         in: query
-        description: 'Start Date
-
-
-          (includes the day abbreviation)'
+        description: Start Date
         schema:
           type: string
           format: date
       - name: on_or_before_start_date
         in: query
-        description: 'Start Date
-
-
-          (includes the day abbreviation)'
+        description: Start Date
         schema:
           type: string
           format: date
@@ -7771,10 +7910,7 @@ paths:
                         start_date:
                           type: string
                           format: date
-                          description: 'Start Date
-
-
-                            (includes the day abbreviation)'
+                          description: Start Date
                         end_date:
                           type: string
                           format: date
@@ -7961,10 +8097,7 @@ paths:
                     start_date:
                       type: string
                       format: date
-                      description: 'Start Date
-
-
-                        (includes the day abbreviation)'
+                      description: Start Date
                     end_date:
                       type: string
                       format: date
@@ -8108,10 +8241,7 @@ paths:
                       start_date:
                         type: string
                         format: date
-                        description: 'Start Date
-
-
-                          (includes the day abbreviation)'
+                        description: Start Date
                       end_date:
                         type: string
                         format: date
@@ -8310,10 +8440,7 @@ paths:
                     start_date:
                       type: string
                       format: date
-                      description: 'Start Date
-
-
-                        (includes the day abbreviation)'
+                      description: Start Date
                     end_date:
                       type: string
                       format: date
@@ -10429,6 +10556,7 @@ paths:
 
 
                             A person record must exist before creating a user account for the person record.'
+                          readOnly: true
                         username:
                           type: string
                           description: Username
@@ -10439,20 +10567,26 @@ paths:
 
 
                             The username in your external login provider. If you are not using an external provider, leave blank and the system will generate a username for the user based on username configuration set up in Axiom.'
+                          readOnly: true
                           maxLength: 255
                         account_type:
                           type: integer
                           description: Account Type
-                        primary_portal:
-                          type: string
-                          description: Primary Portal
-                          maxLength: 200
+                          readOnly: true
                         status:
                           type: integer
                           description: 'Account Status
 
 
                             For Veracross accounts without associated external accounts.'
+                        mfa_status:
+                          type: integer
+                          description: MFA Status
+                        primary_portal:
+                          type: string
+                          description: Primary Portal
+                          readOnly: true
+                          maxLength: 200
                         security_roles:
                           type: string
                           description: Security Roles
@@ -10470,8 +10604,9 @@ paths:
                       - username
                       - external_username
                       - account_type
-                      - primary_portal
                       - status
+                      - mfa_status
+                      - primary_portal
                       - security_roles
                       - last_login_date
                   value_lists:
@@ -10489,6 +10624,7 @@ paths:
                             enum:
                             - account_type
                             - status
+                            - mfa_status
                             - role
                         items:
                           type: array
@@ -31174,6 +31310,13 @@ paths:
                         type: string
                         description: Venue Departure Time
                         maxLength: 8
+                      internal_location_resource_description:
+                        type: string
+                        description: 'Internal Location Resource Description
+
+
+                          The description of the internal resource for this event.'
+                        readOnly: true
                     required:
                     - id
                     - description
@@ -31227,6 +31370,7 @@ paths:
                     - display_on_student_calendar
                     - internal_location_resource_id
                     - venue_departure_time
+                    - internal_location_resource_description
                   value_lists:
                     type: array
                     description: Present only with header `X-API-Value-Lists = include`
@@ -31554,6 +31698,13 @@ paths:
                       type: string
                       description: Venue Departure Time
                       maxLength: 8
+                    internal_location_resource_description:
+                      type: string
+                      description: 'Internal Location Resource Description
+
+
+                        The description of the internal resource for this event.'
+                      readOnly: true
               required:
               - data
       responses:
@@ -43480,6 +43631,845 @@ paths:
       security:
       - access_token:
         - classes.attendance:list
+  /development/gifts:
+    get:
+      tags:
+      - 'Development: Gifts'
+      summary: 'List Development: Gifts'
+      operationId: list_development_gifts
+      parameters:
+      - name: on_or_after_gift_date
+        in: query
+        description: 'Date
+
+
+          The date the gift was given'
+        schema:
+          type: string
+          format: date
+      - name: fiscal_year
+        in: query
+        description: Fiscal Year
+        schema:
+          type: integer
+      - name: constituent_id
+        in: query
+        description: Constituent ID
+        schema:
+          type: integer
+      - name: person.person_id
+        in: query
+        description: Person ID
+        schema:
+          type: integer
+      - name: organization.organization_id
+        in: query
+        description: 'Organization ID
+
+
+          Organization ID'
+        schema:
+          type: integer
+      - name: fundraising_activity
+        in: query
+        description: Fundraising Activity
+        schema:
+          type: string
+      - name: fund
+        in: query
+        description: Fund
+        schema:
+          type: integer
+      - name: event
+        in: query
+        description: Event
+        schema:
+          type: string
+      - name: apply_to_pledge
+        in: query
+        description: Apply To Pledge
+        schema:
+          type: boolean
+      - name: greater_than_or_equal_to_pledge_balance
+        in: query
+        description: 'Pledge Balance
+
+
+          Original Pledge Amount minus the following:
+
+
+          Total Received
+
+
+          Total Writeoff Amount
+
+
+          Total Cancelled Amount'
+        schema:
+          type: number
+      - name: gift_type
+        in: query
+        description: Gift Type
+        schema:
+          type: integer
+      - name: soft_credit_type
+        in: query
+        description: 'Soft Credit Type
+
+
+          Applies to Soft Credit records only.  Indicates the type of soft credit.
+
+
+          (Not to be confused with the &quot;Soft Credit Given&quot; field)'
+        schema:
+          type: integer
+      - name: gift_reference_id
+        in: query
+        description: 'Gift Reference ID
+
+
+          Unique ID for gifts that persists across gift refreshes.'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        gift_type:
+                          type: integer
+                          description: Gift Type
+                        constituent_id:
+                          type: integer
+                          description: Constituent ID
+                        constituent_name:
+                          type: string
+                          description: Constituent
+                          readOnly: true
+                        constituent_record_type:
+                          type: integer
+                          description: Record Type
+                        person:
+                          type: object
+                          properties:
+                            person_id:
+                              type: integer
+                              description: Person ID
+                              readOnly: true
+                            full_name:
+                              type: string
+                              description: 'Full Name
+
+
+                                The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
+                              readOnly: true
+                          required:
+                          - person_id
+                          - full_name
+                          readOnly: true
+                        organization:
+                          type: object
+                          properties:
+                            organization_id:
+                              type: integer
+                              description: 'Organization ID
+
+
+                                Organization ID'
+                              readOnly: true
+                            name:
+                              type: string
+                              description: Organization
+                              maxLength: 200
+                          required:
+                          - organization_id
+                          - name
+                        date:
+                          type: string
+                          format: date
+                          description: 'Date
+
+
+                            The date the gift was given'
+                        fiscal_year:
+                          type: integer
+                          description: Fiscal Year
+                        amount:
+                          type: number
+                          description: 'Amount
+
+
+                            The donation or pledge amount'
+                        fundraising_activity:
+                          type: string
+                          description: Fundraising Activity
+                        fund:
+                          type: string
+                          description: 'Fund Description
+
+
+                            For &quot;Development&quot; funds, not &quot;General Ledger&quot; funds'
+                          maxLength: 200
+                        event:
+                          type: string
+                          description: Event
+                          readOnly: true
+                        apply_to_pledge:
+                          type: boolean
+                          description: Apply To Pledge
+                        associated_pledge_gift_id:
+                          type: integer
+                          description: Gift ID (Pledge or Associated)
+                          readOnly: true
+                        acknowledgement_letter_template:
+                          type: string
+                          description: Acknowledgement Letter Template
+                          readOnly: true
+                        acknowledgement_date:
+                          type: string
+                          format: date
+                          description: 'Acknowledgement Date
+
+
+                            The date the pledge acknowledgement letter was printed'
+                          readOnly: true
+                        thank_you_letter_date:
+                          type: string
+                          format: date
+                          description: 'Thank-You Letter Date
+
+
+                            The date the donation thank-you letter was printed'
+                          readOnly: true
+                        anonymous:
+                          type: boolean
+                          description: Anonymous
+                        notes:
+                          type: string
+                          description: Notes
+                        in_honor_of:
+                          type: string
+                          description: In Honor Of
+                          maxLength: 500
+                        in_memory_of:
+                          type: string
+                          description: In Memory Of
+                          maxLength: 500
+                        payment_method:
+                          type: integer
+                          description: Payment Method
+                        payment_category:
+                          type: integer
+                          description: Payment Category
+                        reward_amount:
+                          type: number
+                          description: 'Reward Amount
+
+
+                            The reward amount for this gift'
+                        in_kind_gift_description:
+                          type: string
+                          description: In Kind Gift Description
+                          readOnly: true
+                        solicitor:
+                          type: string
+                          description: Solicitor
+                          readOnly: true
+                        batch_id:
+                          type: string
+                          description: Batch ID
+                          maxLength: 20
+                        profile_codes:
+                          type: string
+                          description: All Profile Codes
+                          readOnly: true
+                        pledge:
+                          type: object
+                          properties:
+                            start_date:
+                              type: string
+                              format: date
+                              description: Pledge Start Date
+                              readOnly: true
+                            increment:
+                              type: number
+                              description: Pledge Increment
+                            payment_frequency:
+                              type: integer
+                              description: Payment Frequency
+                            total_received:
+                              type: number
+                              description: 'Pledge Total Received
+
+
+                                The total amount of all donations received against this pledge'
+                            total_writeoff:
+                              type: number
+                              description: 'Pledge Total Writeoff
+
+
+                                The total amount written off'
+                            balance:
+                              type: number
+                              description: 'Pledge Balance
+
+
+                                Original Pledge Amount minus the following:
+
+
+                                Total Received
+
+
+                                Total Writeoff Amount
+
+
+                                Total Cancelled Amount'
+                          required:
+                          - start_date
+                          - increment
+                          - payment_frequency
+                          - total_received
+                          - total_writeoff
+                          - balance
+                        soft_credit_type:
+                          type: integer
+                          description: 'Soft Credit Type
+
+
+                            Applies to Soft Credit records only.  Indicates the type of soft credit.
+
+
+                            (Not to be confused with the &quot;Soft Credit Given&quot; field)'
+                        hard_credit_gift_id:
+                          type: integer
+                          description: Hard Credit Gift ID
+                          readOnly: true
+                        gift_reference_id:
+                          type: string
+                          description: 'Gift Reference ID
+
+
+                            Unique ID for gifts that persists across gift refreshes.'
+                          readOnly: true
+                      required:
+                      - id
+                      - gift_type
+                      - constituent_id
+                      - constituent_name
+                      - constituent_record_type
+                      - person
+                      - organization
+                      - date
+                      - fiscal_year
+                      - amount
+                      - fundraising_activity
+                      - fund
+                      - event
+                      - apply_to_pledge
+                      - associated_pledge_gift_id
+                      - acknowledgement_letter_template
+                      - acknowledgement_date
+                      - thank_you_letter_date
+                      - anonymous
+                      - notes
+                      - in_honor_of
+                      - in_memory_of
+                      - payment_method
+                      - payment_category
+                      - reward_amount
+                      - in_kind_gift_description
+                      - solicitor
+                      - batch_id
+                      - profile_codes
+                      - pledge
+                      - soft_credit_type
+                      - hard_credit_gift_id
+                      - gift_reference_id
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - gift_type
+                            - constituent_record_type
+                            - fiscal_year
+                            - payment_method
+                            - payment_category
+                            - pledge.payment_frequency
+                            - soft_credit_type
+                            - fund
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - development.gifts:list
+  /development/gifts/{id}:
+    get:
+      tags:
+      - 'Development: Gifts'
+      summary: 'Read Development: Gifts'
+      operationId: read_development_gifts
+      parameters:
+      - name: id
+        in: path
+        description: Gift ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      gift_type:
+                        type: integer
+                        description: Gift Type
+                      constituent_id:
+                        type: integer
+                        description: Constituent ID
+                      constituent_name:
+                        type: string
+                        description: Constituent
+                        readOnly: true
+                      constituent_record_type:
+                        type: integer
+                        description: Record Type
+                      person:
+                        type: object
+                        properties:
+                          person_id:
+                            type: integer
+                            description: Person ID
+                            readOnly: true
+                          full_name:
+                            type: string
+                            description: 'Full Name
+
+
+                              The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
+                            readOnly: true
+                        required:
+                        - person_id
+                        - full_name
+                        readOnly: true
+                      organization:
+                        type: object
+                        properties:
+                          organization_id:
+                            type: integer
+                            description: 'Organization ID
+
+
+                              Organization ID'
+                            readOnly: true
+                          name:
+                            type: string
+                            description: Organization
+                            maxLength: 200
+                        required:
+                        - organization_id
+                        - name
+                      date:
+                        type: string
+                        format: date
+                        description: 'Date
+
+
+                          The date the gift was given'
+                      fiscal_year:
+                        type: integer
+                        description: Fiscal Year
+                      amount:
+                        type: number
+                        description: 'Amount
+
+
+                          The donation or pledge amount'
+                      fundraising_activity:
+                        type: string
+                        description: Fundraising Activity
+                      fund:
+                        type: string
+                        description: 'Fund Description
+
+
+                          For &quot;Development&quot; funds, not &quot;General Ledger&quot; funds'
+                        maxLength: 200
+                      event:
+                        type: string
+                        description: Event
+                        readOnly: true
+                      apply_to_pledge:
+                        type: boolean
+                        description: Apply To Pledge
+                      associated_pledge_gift_id:
+                        type: integer
+                        description: Gift ID (Pledge or Associated)
+                        readOnly: true
+                      acknowledgement_letter_template:
+                        type: string
+                        description: Acknowledgement Letter Template
+                        readOnly: true
+                      acknowledgement_date:
+                        type: string
+                        format: date
+                        description: 'Acknowledgement Date
+
+
+                          The date the pledge acknowledgement letter was printed'
+                        readOnly: true
+                      thank_you_letter_date:
+                        type: string
+                        format: date
+                        description: 'Thank-You Letter Date
+
+
+                          The date the donation thank-you letter was printed'
+                        readOnly: true
+                      anonymous:
+                        type: boolean
+                        description: Anonymous
+                      notes:
+                        type: string
+                        description: Notes
+                      in_honor_of:
+                        type: string
+                        description: In Honor Of
+                        maxLength: 500
+                      in_memory_of:
+                        type: string
+                        description: In Memory Of
+                        maxLength: 500
+                      payment_method:
+                        type: integer
+                        description: Payment Method
+                      payment_category:
+                        type: integer
+                        description: Payment Category
+                      reward_amount:
+                        type: number
+                        description: 'Reward Amount
+
+
+                          The reward amount for this gift'
+                      in_kind_gift_description:
+                        type: string
+                        description: In Kind Gift Description
+                        readOnly: true
+                      solicitor:
+                        type: string
+                        description: Solicitor
+                        readOnly: true
+                      batch_id:
+                        type: string
+                        description: Batch ID
+                        maxLength: 20
+                      profile_codes:
+                        type: string
+                        description: All Profile Codes
+                        readOnly: true
+                      pledge:
+                        type: object
+                        properties:
+                          start_date:
+                            type: string
+                            format: date
+                            description: Pledge Start Date
+                            readOnly: true
+                          increment:
+                            type: number
+                            description: Pledge Increment
+                          payment_frequency:
+                            type: integer
+                            description: Payment Frequency
+                          total_received:
+                            type: number
+                            description: 'Pledge Total Received
+
+
+                              The total amount of all donations received against this pledge'
+                          total_writeoff:
+                            type: number
+                            description: 'Pledge Total Writeoff
+
+
+                              The total amount written off'
+                          balance:
+                            type: number
+                            description: 'Pledge Balance
+
+
+                              Original Pledge Amount minus the following:
+
+
+                              Total Received
+
+
+                              Total Writeoff Amount
+
+
+                              Total Cancelled Amount'
+                        required:
+                        - start_date
+                        - increment
+                        - payment_frequency
+                        - total_received
+                        - total_writeoff
+                        - balance
+                      soft_credit_type:
+                        type: integer
+                        description: 'Soft Credit Type
+
+
+                          Applies to Soft Credit records only.  Indicates the type of soft credit.
+
+
+                          (Not to be confused with the &quot;Soft Credit Given&quot; field)'
+                      hard_credit_gift_id:
+                        type: integer
+                        description: Hard Credit Gift ID
+                        readOnly: true
+                      gift_reference_id:
+                        type: string
+                        description: 'Gift Reference ID
+
+
+                          Unique ID for gifts that persists across gift refreshes.'
+                        readOnly: true
+                    required:
+                    - id
+                    - gift_type
+                    - constituent_id
+                    - constituent_name
+                    - constituent_record_type
+                    - person
+                    - organization
+                    - date
+                    - fiscal_year
+                    - amount
+                    - fundraising_activity
+                    - fund
+                    - event
+                    - apply_to_pledge
+                    - associated_pledge_gift_id
+                    - acknowledgement_letter_template
+                    - acknowledgement_date
+                    - thank_you_letter_date
+                    - anonymous
+                    - notes
+                    - in_honor_of
+                    - in_memory_of
+                    - payment_method
+                    - payment_category
+                    - reward_amount
+                    - in_kind_gift_description
+                    - solicitor
+                    - batch_id
+                    - profile_codes
+                    - pledge
+                    - soft_credit_type
+                    - hard_credit_gift_id
+                    - gift_reference_id
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - gift_type
+                            - constituent_record_type
+                            - fiscal_year
+                            - payment_method
+                            - payment_category
+                            - pledge.payment_frequency
+                            - soft_credit_type
+                            - fund
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - development.gifts:read
   /contact_info:
     get:
       tags:
@@ -45128,821 +46118,6 @@ paths:
       security:
       - access_token:
         - development.constituents:read
-  /development/gifts:
-    get:
-      tags:
-      - 'Development: Gifts'
-      summary: 'List Development: Gifts'
-      operationId: list_development_gifts
-      parameters:
-      - name: on_or_after_gift_date
-        in: query
-        description: 'Date
-
-
-          The date the gift was given'
-        schema:
-          type: string
-          format: date
-      - name: fiscal_year
-        in: query
-        description: Fiscal Year
-        schema:
-          type: integer
-      - name: constituent_id
-        in: query
-        description: Constituent ID
-        schema:
-          type: integer
-      - name: person.person_id
-        in: query
-        description: Person ID
-        schema:
-          type: integer
-      - name: organization.organization_id
-        in: query
-        description: 'Organization ID
-
-
-          Organization ID'
-        schema:
-          type: integer
-      - name: fundraising_activity
-        in: query
-        description: Fundraising Activity
-        schema:
-          type: string
-      - name: fund
-        in: query
-        description: Fund
-        schema:
-          type: integer
-      - name: event
-        in: query
-        description: Event
-        schema:
-          type: string
-      - name: apply_to_pledge
-        in: query
-        description: Apply To Pledge
-        schema:
-          type: boolean
-      - name: greater_than_or_equal_to_pledge_balance
-        in: query
-        description: 'Pledge Balance
-
-
-          Original Pledge Amount minus the following:
-
-
-          Total Received
-
-
-          Total Writeoff Amount
-
-
-          Total Cancelled Amount'
-        schema:
-          type: number
-      - name: gift_type
-        in: query
-        description: Gift Type
-        schema:
-          type: integer
-      - name: soft_credit_type
-        in: query
-        description: 'Soft Credit Type
-
-
-          Applies to Soft Credit records only.  Indicates the type of soft credit.
-
-
-          (Not to be confused with the &quot;Soft Credit Given&quot; field)'
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        gift_type:
-                          type: integer
-                          description: Gift Type
-                        constituent_id:
-                          type: integer
-                          description: Constituent ID
-                        constituent_name:
-                          type: string
-                          description: Constituent
-                          readOnly: true
-                        constituent_record_type:
-                          type: integer
-                          description: Record Type
-                        person:
-                          type: object
-                          properties:
-                            person_id:
-                              type: integer
-                              description: Person ID
-                              readOnly: true
-                            full_name:
-                              type: string
-                              description: 'Full Name
-
-
-                                The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
-                              readOnly: true
-                          required:
-                          - person_id
-                          - full_name
-                          readOnly: true
-                        organization:
-                          type: object
-                          properties:
-                            organization_id:
-                              type: integer
-                              description: 'Organization ID
-
-
-                                Organization ID'
-                              readOnly: true
-                            name:
-                              type: string
-                              description: Organization
-                              maxLength: 200
-                          required:
-                          - organization_id
-                          - name
-                        date:
-                          type: string
-                          format: date
-                          description: 'Date
-
-
-                            The date the gift was given'
-                        fiscal_year:
-                          type: integer
-                          description: Fiscal Year
-                        amount:
-                          type: number
-                          description: 'Amount
-
-
-                            The donation or pledge amount'
-                        fundraising_activity:
-                          type: string
-                          description: Fundraising Activity
-                        fund:
-                          type: string
-                          description: 'Fund Description
-
-
-                            For &quot;Development&quot; funds, not &quot;General Ledger&quot; funds'
-                          maxLength: 200
-                        event:
-                          type: string
-                          description: Event
-                          readOnly: true
-                        apply_to_pledge:
-                          type: boolean
-                          description: Apply To Pledge
-                        associated_pledge_gift_id:
-                          type: integer
-                          description: Gift ID (Pledge or Associated)
-                          readOnly: true
-                        acknowledgement_letter_template:
-                          type: string
-                          description: Acknowledgement Letter Template
-                          readOnly: true
-                        acknowledgement_date:
-                          type: string
-                          format: date
-                          description: 'Acknowledgement Date
-
-
-                            The date the pledge acknowledgement letter was printed'
-                          readOnly: true
-                        thank_you_letter_date:
-                          type: string
-                          format: date
-                          description: 'Thank-You Letter Date
-
-
-                            The date the donation thank-you letter was printed'
-                          readOnly: true
-                        anonymous:
-                          type: boolean
-                          description: Anonymous
-                        notes:
-                          type: string
-                          description: Notes
-                        in_honor_of:
-                          type: string
-                          description: In Honor Of
-                          maxLength: 500
-                        in_memory_of:
-                          type: string
-                          description: In Memory Of
-                          maxLength: 500
-                        payment_method:
-                          type: integer
-                          description: Payment Method
-                        payment_category:
-                          type: integer
-                          description: Payment Category
-                        reward_amount:
-                          type: number
-                          description: 'Reward Amount
-
-
-                            The reward amount for this gift'
-                        in_kind_gift_description:
-                          type: string
-                          description: In Kind Gift Description
-                          readOnly: true
-                        solicitor:
-                          type: string
-                          description: Solicitor
-                          readOnly: true
-                        batch_id:
-                          type: string
-                          description: Batch ID
-                          maxLength: 20
-                        profile_codes:
-                          type: string
-                          description: All Profile Codes
-                          readOnly: true
-                        pledge:
-                          type: object
-                          properties:
-                            start_date:
-                              type: string
-                              format: date
-                              description: Pledge Start Date
-                              readOnly: true
-                            increment:
-                              type: number
-                              description: Pledge Increment
-                            payment_frequency:
-                              type: integer
-                              description: Payment Frequency
-                            total_received:
-                              type: number
-                              description: 'Pledge Total Received
-
-
-                                The total amount of all donations received against this pledge'
-                            total_writeoff:
-                              type: number
-                              description: 'Pledge Total Writeoff
-
-
-                                The total amount written off'
-                            balance:
-                              type: number
-                              description: 'Pledge Balance
-
-
-                                Original Pledge Amount minus the following:
-
-
-                                Total Received
-
-
-                                Total Writeoff Amount
-
-
-                                Total Cancelled Amount'
-                          required:
-                          - start_date
-                          - increment
-                          - payment_frequency
-                          - total_received
-                          - total_writeoff
-                          - balance
-                        soft_credit_type:
-                          type: integer
-                          description: 'Soft Credit Type
-
-
-                            Applies to Soft Credit records only.  Indicates the type of soft credit.
-
-
-                            (Not to be confused with the &quot;Soft Credit Given&quot; field)'
-                        hard_credit_gift_id:
-                          type: integer
-                          description: Hard Credit Gift ID
-                          readOnly: true
-                      required:
-                      - id
-                      - gift_type
-                      - constituent_id
-                      - constituent_name
-                      - constituent_record_type
-                      - person
-                      - organization
-                      - date
-                      - fiscal_year
-                      - amount
-                      - fundraising_activity
-                      - fund
-                      - event
-                      - apply_to_pledge
-                      - associated_pledge_gift_id
-                      - acknowledgement_letter_template
-                      - acknowledgement_date
-                      - thank_you_letter_date
-                      - anonymous
-                      - notes
-                      - in_honor_of
-                      - in_memory_of
-                      - payment_method
-                      - payment_category
-                      - reward_amount
-                      - in_kind_gift_description
-                      - solicitor
-                      - batch_id
-                      - profile_codes
-                      - pledge
-                      - soft_credit_type
-                      - hard_credit_gift_id
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - gift_type
-                            - constituent_record_type
-                            - fiscal_year
-                            - payment_method
-                            - payment_category
-                            - pledge.payment_frequency
-                            - soft_credit_type
-                            - fund
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - development.gifts:list
-  /development/gifts/{id}:
-    get:
-      tags:
-      - 'Development: Gifts'
-      summary: 'Read Development: Gifts'
-      operationId: read_development_gifts
-      parameters:
-      - name: id
-        in: path
-        description: Gift ID
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      gift_type:
-                        type: integer
-                        description: Gift Type
-                      constituent_id:
-                        type: integer
-                        description: Constituent ID
-                      constituent_name:
-                        type: string
-                        description: Constituent
-                        readOnly: true
-                      constituent_record_type:
-                        type: integer
-                        description: Record Type
-                      person:
-                        type: object
-                        properties:
-                          person_id:
-                            type: integer
-                            description: Person ID
-                            readOnly: true
-                          full_name:
-                            type: string
-                            description: 'Full Name
-
-
-                              The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
-                            readOnly: true
-                        required:
-                        - person_id
-                        - full_name
-                        readOnly: true
-                      organization:
-                        type: object
-                        properties:
-                          organization_id:
-                            type: integer
-                            description: 'Organization ID
-
-
-                              Organization ID'
-                            readOnly: true
-                          name:
-                            type: string
-                            description: Organization
-                            maxLength: 200
-                        required:
-                        - organization_id
-                        - name
-                      date:
-                        type: string
-                        format: date
-                        description: 'Date
-
-
-                          The date the gift was given'
-                      fiscal_year:
-                        type: integer
-                        description: Fiscal Year
-                      amount:
-                        type: number
-                        description: 'Amount
-
-
-                          The donation or pledge amount'
-                      fundraising_activity:
-                        type: string
-                        description: Fundraising Activity
-                      fund:
-                        type: string
-                        description: 'Fund Description
-
-
-                          For &quot;Development&quot; funds, not &quot;General Ledger&quot; funds'
-                        maxLength: 200
-                      event:
-                        type: string
-                        description: Event
-                        readOnly: true
-                      apply_to_pledge:
-                        type: boolean
-                        description: Apply To Pledge
-                      associated_pledge_gift_id:
-                        type: integer
-                        description: Gift ID (Pledge or Associated)
-                        readOnly: true
-                      acknowledgement_letter_template:
-                        type: string
-                        description: Acknowledgement Letter Template
-                        readOnly: true
-                      acknowledgement_date:
-                        type: string
-                        format: date
-                        description: 'Acknowledgement Date
-
-
-                          The date the pledge acknowledgement letter was printed'
-                        readOnly: true
-                      thank_you_letter_date:
-                        type: string
-                        format: date
-                        description: 'Thank-You Letter Date
-
-
-                          The date the donation thank-you letter was printed'
-                        readOnly: true
-                      anonymous:
-                        type: boolean
-                        description: Anonymous
-                      notes:
-                        type: string
-                        description: Notes
-                      in_honor_of:
-                        type: string
-                        description: In Honor Of
-                        maxLength: 500
-                      in_memory_of:
-                        type: string
-                        description: In Memory Of
-                        maxLength: 500
-                      payment_method:
-                        type: integer
-                        description: Payment Method
-                      payment_category:
-                        type: integer
-                        description: Payment Category
-                      reward_amount:
-                        type: number
-                        description: 'Reward Amount
-
-
-                          The reward amount for this gift'
-                      in_kind_gift_description:
-                        type: string
-                        description: In Kind Gift Description
-                        readOnly: true
-                      solicitor:
-                        type: string
-                        description: Solicitor
-                        readOnly: true
-                      batch_id:
-                        type: string
-                        description: Batch ID
-                        maxLength: 20
-                      profile_codes:
-                        type: string
-                        description: All Profile Codes
-                        readOnly: true
-                      pledge:
-                        type: object
-                        properties:
-                          start_date:
-                            type: string
-                            format: date
-                            description: Pledge Start Date
-                            readOnly: true
-                          increment:
-                            type: number
-                            description: Pledge Increment
-                          payment_frequency:
-                            type: integer
-                            description: Payment Frequency
-                          total_received:
-                            type: number
-                            description: 'Pledge Total Received
-
-
-                              The total amount of all donations received against this pledge'
-                          total_writeoff:
-                            type: number
-                            description: 'Pledge Total Writeoff
-
-
-                              The total amount written off'
-                          balance:
-                            type: number
-                            description: 'Pledge Balance
-
-
-                              Original Pledge Amount minus the following:
-
-
-                              Total Received
-
-
-                              Total Writeoff Amount
-
-
-                              Total Cancelled Amount'
-                        required:
-                        - start_date
-                        - increment
-                        - payment_frequency
-                        - total_received
-                        - total_writeoff
-                        - balance
-                      soft_credit_type:
-                        type: integer
-                        description: 'Soft Credit Type
-
-
-                          Applies to Soft Credit records only.  Indicates the type of soft credit.
-
-
-                          (Not to be confused with the &quot;Soft Credit Given&quot; field)'
-                      hard_credit_gift_id:
-                        type: integer
-                        description: Hard Credit Gift ID
-                        readOnly: true
-                    required:
-                    - id
-                    - gift_type
-                    - constituent_id
-                    - constituent_name
-                    - constituent_record_type
-                    - person
-                    - organization
-                    - date
-                    - fiscal_year
-                    - amount
-                    - fundraising_activity
-                    - fund
-                    - event
-                    - apply_to_pledge
-                    - associated_pledge_gift_id
-                    - acknowledgement_letter_template
-                    - acknowledgement_date
-                    - thank_you_letter_date
-                    - anonymous
-                    - notes
-                    - in_honor_of
-                    - in_memory_of
-                    - payment_method
-                    - payment_category
-                    - reward_amount
-                    - in_kind_gift_description
-                    - solicitor
-                    - batch_id
-                    - profile_codes
-                    - pledge
-                    - soft_credit_type
-                    - hard_credit_gift_id
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - gift_type
-                            - constituent_record_type
-                            - fiscal_year
-                            - payment_method
-                            - payment_category
-                            - pledge.payment_frequency
-                            - soft_credit_type
-                            - fund
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - development.gifts:read
   /events/athletics:
     get:
       tags:
@@ -49725,6 +49900,388 @@ paths:
       security:
       - access_token:
         - finance.ap_disbursement_items:update
+  /finance/vendors:
+    post:
+      tags:
+      - 'Finance: Vendors'
+      summary: 'Create Finance: Vendors'
+      operationId: create_finance_vendors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    vendor_id:
+                      type: integer
+                      description: Vendor ID
+                    vendor_name:
+                      type: string
+                      description: Vendor Name
+                      maxLength: 200
+                    address_1:
+                      type: string
+                      description: Address 1
+                      maxLength: 200
+                    address_2:
+                      type: string
+                      description: Address 2
+                      maxLength: 200
+                    address_3:
+                      type: string
+                      description: Address 3
+                      maxLength: 200
+                    city:
+                      type: string
+                      description: City
+                      maxLength: 50
+                    state_province:
+                      type: string
+                      description: State Province
+                      maxLength: 50
+                    postal_code:
+                      type: string
+                      description: Postal Code
+                      maxLength: 20
+                    country:
+                      type: integer
+                      description: Country
+                    email:
+                      type: string
+                      description: Email
+                      maxLength: 100
+                    direct_deposit_account:
+                      type: string
+                      description: Direct Deposit Account
+                      maxLength: 20
+                    direct_deposit_bank:
+                      type: string
+                      description: Direct Deposit Bank
+                      maxLength: 20
+                    account_number:
+                      type: string
+                      description: Account Number
+                      maxLength: 75
+                    standard_days_to_pay:
+                      type: integer
+                      description: Standard Days To Pay
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+                    inactive:
+                      type: boolean
+                      description: Inactive
+                    vendor_tax_info:
+                      type: string
+                      description: Vendor Tax Info
+                      readOnly: true
+                    federal_tax_id:
+                      type: string
+                      description: 'Tax ID
+
+
+                        Tax ID that is necessary for government reporting purposes.'
+                      maxLength: 20
+                    merged_from:
+                      type: string
+                      description: Merge Sources
+                      readOnly: true
+                  required:
+                  - vendor_id
+                  - country
+                  - inactive
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.vendors:create
+    get:
+      tags:
+      - 'Finance: Vendors'
+      summary: 'List Finance: Vendors'
+      operationId: list_finance_vendors
+      parameters:
+      - name: inactive
+        in: query
+        description: Show inactive vendors?
+        schema:
+          type: boolean
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        vendor_id:
+                          type: integer
+                          description: Vendor ID
+                        vendor_name:
+                          type: string
+                          description: Vendor Name
+                          maxLength: 200
+                        address_1:
+                          type: string
+                          description: Address 1
+                          maxLength: 200
+                        address_2:
+                          type: string
+                          description: Address 2
+                          maxLength: 200
+                        address_3:
+                          type: string
+                          description: Address 3
+                          maxLength: 200
+                        city:
+                          type: string
+                          description: City
+                          maxLength: 50
+                        state_province:
+                          type: string
+                          description: State Province
+                          maxLength: 50
+                        postal_code:
+                          type: string
+                          description: Postal Code
+                          maxLength: 20
+                        country:
+                          type: integer
+                          description: Country
+                        email:
+                          type: string
+                          description: Email
+                          maxLength: 100
+                        direct_deposit_account:
+                          type: string
+                          description: Direct Deposit Account
+                          maxLength: 20
+                        direct_deposit_bank:
+                          type: string
+                          description: Direct Deposit Bank
+                          maxLength: 20
+                        account_number:
+                          type: string
+                          description: Account Number
+                          maxLength: 75
+                        standard_days_to_pay:
+                          type: integer
+                          description: Standard Days To Pay
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                        inactive:
+                          type: boolean
+                          description: Inactive
+                        vendor_tax_info:
+                          type: string
+                          description: Vendor Tax Info
+                          readOnly: true
+                        federal_tax_id:
+                          type: string
+                          description: 'Tax ID
+
+
+                            Tax ID that is necessary for government reporting purposes.'
+                          maxLength: 20
+                        merged_from:
+                          type: string
+                          description: Merge Sources
+                          readOnly: true
+                      required:
+                      - vendor_id
+                      - vendor_name
+                      - address_1
+                      - address_2
+                      - address_3
+                      - city
+                      - state_province
+                      - postal_code
+                      - country
+                      - email
+                      - direct_deposit_account
+                      - direct_deposit_bank
+                      - account_number
+                      - standard_days_to_pay
+                      - last_modified_date
+                      - inactive
+                      - vendor_tax_info
+                      - federal_tax_id
+                      - merged_from
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - country
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.vendors:list
   /finance/ap_invoice_items:
     get:
       tags:
@@ -49906,6 +50463,752 @@ paths:
       security:
       - access_token:
         - finance.ap_invoice_items:list
+  /finance/vendors/{id}:
+    get:
+      tags:
+      - 'Finance: Vendors'
+      summary: 'Read Finance: Vendors'
+      operationId: read_finance_vendors
+      parameters:
+      - name: id
+        in: path
+        description: 'Vendor ID
+
+
+          Organization ID'
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      vendor_id:
+                        type: integer
+                        description: 'Vendor ID
+
+
+                          Organization ID'
+                      vendor_name:
+                        type: string
+                        description: Vendor Name
+                        maxLength: 200
+                      address_1:
+                        type: string
+                        description: Address 1
+                        maxLength: 200
+                      address_2:
+                        type: string
+                        description: Address 2
+                        maxLength: 200
+                      address_3:
+                        type: string
+                        description: Address 3
+                        maxLength: 200
+                      city:
+                        type: string
+                        description: City
+                        maxLength: 50
+                      state_province:
+                        type: string
+                        description: State/Province
+                        maxLength: 50
+                      postal_code:
+                        type: string
+                        description: Postal Code
+                        maxLength: 20
+                      country:
+                        type: integer
+                        description: Country
+                      email:
+                        type: string
+                        description: 'Email
+
+
+                          A generic email for an organization'
+                        maxLength: 100
+                      bank_account:
+                        type: string
+                        description: 'Direct Deposit Account
+
+
+                          Bank account number into which payments should be deposited.'
+                        maxLength: 20
+                      routing_number:
+                        type: string
+                        description: 'Direct Deposit Bank
+
+
+                          Routing number for this vendor&#39;s bank'
+                        maxLength: 20
+                      account_number:
+                        type: string
+                        description: Account Number
+                        maxLength: 75
+                      standard_days_to_pay:
+                        type: integer
+                        description: 'Standard Days to Pay
+
+
+                          Standard number of days to pay invoices.'
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                      inactive:
+                        type: boolean
+                        description: 'Inactive?
+
+
+                          Is this vendor no longer active with our school?'
+                      vendor_tax_info:
+                        type: string
+                        description: Vendor Tax Info
+                        readOnly: true
+                      federal_tax_id:
+                        type: string
+                        description: 'Federal Tax ID
+
+
+                          Tax ID is necessary for vendors that require 1099&#39;s at year end.'
+                        maxLength: 20
+                      merged_from:
+                        type: string
+                        description: Merge Sources
+                        readOnly: true
+                    required:
+                    - vendor_id
+                    - vendor_name
+                    - address_1
+                    - address_2
+                    - address_3
+                    - city
+                    - state_province
+                    - postal_code
+                    - country
+                    - email
+                    - bank_account
+                    - routing_number
+                    - account_number
+                    - standard_days_to_pay
+                    - last_modified_date
+                    - inactive
+                    - vendor_tax_info
+                    - federal_tax_id
+                    - merged_from
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - country
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.vendors:read
+    patch:
+      tags:
+      - 'Finance: Vendors'
+      summary: 'Update Finance: Vendors'
+      operationId: update_finance_vendors
+      parameters:
+      - name: id
+        in: path
+        description: 'Vendor ID
+
+
+          Organization ID'
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    vendor_id:
+                      type: integer
+                      description: 'Vendor ID
+
+
+                        Organization ID'
+                    vendor_name:
+                      type: string
+                      description: Vendor Name
+                      maxLength: 200
+                    address_1:
+                      type: string
+                      description: Address 1
+                      maxLength: 200
+                    address_2:
+                      type: string
+                      description: Address 2
+                      maxLength: 200
+                    address_3:
+                      type: string
+                      description: Address 3
+                      maxLength: 200
+                    city:
+                      type: string
+                      description: City
+                      maxLength: 50
+                    state_province:
+                      type: string
+                      description: State/Province
+                      maxLength: 50
+                    postal_code:
+                      type: string
+                      description: Postal Code
+                      maxLength: 20
+                    country:
+                      type: integer
+                      description: Country
+                    email:
+                      type: string
+                      description: 'Email
+
+
+                        A generic email for an organization'
+                      maxLength: 100
+                    bank_account:
+                      type: string
+                      description: 'Direct Deposit Account
+
+
+                        Bank account number into which payments should be deposited.'
+                      maxLength: 20
+                    routing_number:
+                      type: string
+                      description: 'Direct Deposit Bank
+
+
+                        Routing number for this vendor&#39;s bank'
+                      maxLength: 20
+                    account_number:
+                      type: string
+                      description: Account Number
+                      maxLength: 75
+                    standard_days_to_pay:
+                      type: integer
+                      description: 'Standard Days to Pay
+
+
+                        Standard number of days to pay invoices.'
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+                    inactive:
+                      type: boolean
+                      description: 'Inactive?
+
+
+                        Is this vendor no longer active with our school?'
+                    vendor_tax_info:
+                      type: string
+                      description: Vendor Tax Info
+                      readOnly: true
+                    federal_tax_id:
+                      type: string
+                      description: 'Federal Tax ID
+
+
+                        Tax ID is necessary for vendors that require 1099&#39;s at year end.'
+                      maxLength: 20
+                    merged_from:
+                      type: string
+                      description: Merge Sources
+                      readOnly: true
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.vendors:update
+  /finance/ap_disbursements:
+    post:
+      tags:
+      - 'Finance: AP Disbursements'
+      summary: 'Create Finance: AP Disbursements'
+      operationId: create_finance_ap_disbursements
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    disbursement_id:
+                      type: integer
+                      description: Disbursement Header
+                      readOnly: true
+                    check_reference_number:
+                      type: integer
+                      description: Check/Reference Number
+                    description:
+                      type: string
+                      description: Description
+                      maxLength: 80
+                    disbursement_date:
+                      type: string
+                      format: date
+                      description: Disbursement Date
+                    disbursement_category:
+                      type: integer
+                      description: Disbursement Category
+                    disbursement_type:
+                      type: integer
+                      description: Disbursement Type
+                    vendor_id:
+                      type: integer
+                      description: Vendor ID
+                    cash_gl_account_id:
+                      type: integer
+                      description: Cash GL Account ID
+                    payee_name:
+                      type: string
+                      description: Payee Name
+                      maxLength: 200
+                    amount:
+                      type: number
+                      description: Amount
+                    cleared:
+                      type: boolean
+                      description: Cleared (H)?
+                    settled:
+                      type: boolean
+                      description: 'Settled?
+
+
+                        Indicates whether the vendor has received the disbursed funds.'
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_disbursements:create
+    get:
+      tags:
+      - 'Finance: AP Disbursements'
+      summary: 'List Finance: AP Disbursements'
+      operationId: list_finance_ap_disbursements
+      parameters:
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        disbursement_id:
+                          type: integer
+                          description: Disbursement Header
+                          readOnly: true
+                        description:
+                          type: string
+                          description: Description
+                          maxLength: 80
+                        check_reference_number:
+                          type: integer
+                          description: Check/Reference Number
+                        disbursement_date:
+                          type: string
+                          format: date
+                          description: Disbursement Date
+                        disbursement_category:
+                          type: integer
+                          description: Disbursement Category
+                        disbursement_type:
+                          type: integer
+                          description: Disbursement Type
+                        vendor:
+                          type: string
+                          description: Organization
+                          maxLength: 200
+                        vendor_id:
+                          type: integer
+                          description: Vendor ID
+                        cash_gl_account:
+                          type: string
+                          description: GL Account
+                          readOnly: true
+                        cash_gl_account_id:
+                          type: integer
+                          description: Cash GL Account ID
+                        payee_name:
+                          type: string
+                          description: Payee Name
+                          maxLength: 200
+                        amount:
+                          type: number
+                          description: Amount - Read Only
+                          readOnly: true
+                        posting_date:
+                          type: string
+                          format: date
+                          description: Posting Date - Read Only
+                          readOnly: true
+                        je_ref_id:
+                          type: string
+                          description: 'JE Ref # - Read Only'
+                          readOnly: true
+                        cleared:
+                          type: boolean
+                          description: Cleared (H)?
+                        settled:
+                          type: boolean
+                          description: 'Settled?
+
+
+                            Indicates whether the vendor has received the disbursed funds.'
+                        void:
+                          type: boolean
+                          description: Void? - Read Only
+                          readOnly: true
+                        entered_as_void:
+                          type: boolean
+                          description: Entered As Void? - Read Only
+                          readOnly: true
+                        input_date:
+                          type: string
+                          format: date-time
+                          description: Input Date
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                      required:
+                      - disbursement_id
+                      - description
+                      - check_reference_number
+                      - disbursement_date
+                      - disbursement_category
+                      - disbursement_type
+                      - vendor
+                      - vendor_id
+                      - cash_gl_account
+                      - cash_gl_account_id
+                      - payee_name
+                      - amount
+                      - posting_date
+                      - je_ref_id
+                      - cleared
+                      - settled
+                      - void
+                      - entered_as_void
+                      - input_date
+                      - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - disbursement_category
+                            - disbursement_type
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_disbursements:list
   /finance/ap_invoices:
     post:
       tags:
@@ -50856,772 +52159,6 @@ paths:
       security:
       - access_token:
         - finance.purchase_request_workflows:read
-  /finance/vendors:
-    post:
-      tags:
-      - 'Finance: Vendors'
-      summary: 'Create Finance: Vendors'
-      operationId: create_finance_vendors
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    vendor_id:
-                      type: integer
-                      description: Vendor ID
-                    vendor_name:
-                      type: string
-                      description: Vendor Name
-                      maxLength: 200
-                    address_1:
-                      type: string
-                      description: Address 1
-                      maxLength: 200
-                    address_2:
-                      type: string
-                      description: Address 2
-                      maxLength: 200
-                    address_3:
-                      type: string
-                      description: Address 3
-                      maxLength: 200
-                    city:
-                      type: string
-                      description: City
-                      maxLength: 50
-                    state_province:
-                      type: string
-                      description: State Province
-                      maxLength: 50
-                    postal_code:
-                      type: string
-                      description: Postal Code
-                      maxLength: 20
-                    country:
-                      type: integer
-                      description: Country
-                    email:
-                      type: string
-                      description: Email
-                      maxLength: 100
-                    direct_deposit_account:
-                      type: string
-                      description: Direct Deposit Account
-                      maxLength: 20
-                    direct_deposit_bank:
-                      type: string
-                      description: Direct Deposit Bank
-                      maxLength: 20
-                    account_number:
-                      type: string
-                      description: Account Number
-                      maxLength: 75
-                    standard_days_to_pay:
-                      type: integer
-                      description: Standard Days To Pay
-                    last_modified_date:
-                      type: string
-                      format: date-time
-                      description: Last Modified Date
-                      readOnly: true
-                    inactive:
-                      type: boolean
-                      description: Inactive
-                    vendor_tax_info:
-                      type: string
-                      description: Vendor Tax Info
-                      readOnly: true
-                    federal_tax_id:
-                      type: string
-                      description: 'Tax ID
-
-
-                        Tax ID that is necessary for government reporting purposes.'
-                      maxLength: 20
-                  required:
-                  - vendor_id
-                  - country
-                  - inactive
-              required:
-              - data
-      responses:
-        '201':
-          description: Created
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties: {}
-                    required:
-                    - id
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.vendors:create
-    get:
-      tags:
-      - 'Finance: Vendors'
-      summary: 'List Finance: Vendors'
-      operationId: list_finance_vendors
-      parameters:
-      - name: inactive
-        in: query
-        description: Show inactive vendors?
-        schema:
-          type: boolean
-      - name: on_or_after_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_before_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        vendor_id:
-                          type: integer
-                          description: Vendor ID
-                        vendor_name:
-                          type: string
-                          description: Vendor Name
-                          maxLength: 200
-                        address_1:
-                          type: string
-                          description: Address 1
-                          maxLength: 200
-                        address_2:
-                          type: string
-                          description: Address 2
-                          maxLength: 200
-                        address_3:
-                          type: string
-                          description: Address 3
-                          maxLength: 200
-                        city:
-                          type: string
-                          description: City
-                          maxLength: 50
-                        state_province:
-                          type: string
-                          description: State Province
-                          maxLength: 50
-                        postal_code:
-                          type: string
-                          description: Postal Code
-                          maxLength: 20
-                        country:
-                          type: integer
-                          description: Country
-                        email:
-                          type: string
-                          description: Email
-                          maxLength: 100
-                        direct_deposit_account:
-                          type: string
-                          description: Direct Deposit Account
-                          maxLength: 20
-                        direct_deposit_bank:
-                          type: string
-                          description: Direct Deposit Bank
-                          maxLength: 20
-                        account_number:
-                          type: string
-                          description: Account Number
-                          maxLength: 75
-                        standard_days_to_pay:
-                          type: integer
-                          description: Standard Days To Pay
-                        last_modified_date:
-                          type: string
-                          format: date-time
-                          description: Last Modified Date
-                          readOnly: true
-                        inactive:
-                          type: boolean
-                          description: Inactive
-                        vendor_tax_info:
-                          type: string
-                          description: Vendor Tax Info
-                          readOnly: true
-                        federal_tax_id:
-                          type: string
-                          description: 'Tax ID
-
-
-                            Tax ID that is necessary for government reporting purposes.'
-                          maxLength: 20
-                      required:
-                      - vendor_id
-                      - vendor_name
-                      - address_1
-                      - address_2
-                      - address_3
-                      - city
-                      - state_province
-                      - postal_code
-                      - country
-                      - email
-                      - direct_deposit_account
-                      - direct_deposit_bank
-                      - account_number
-                      - standard_days_to_pay
-                      - last_modified_date
-                      - inactive
-                      - vendor_tax_info
-                      - federal_tax_id
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - country
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.vendors:list
-  /finance/vendors/{id}:
-    get:
-      tags:
-      - 'Finance: Vendors'
-      summary: 'Read Finance: Vendors'
-      operationId: read_finance_vendors
-      parameters:
-      - name: id
-        in: path
-        description: 'Vendor ID
-
-
-          Organization ID'
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      vendor_id:
-                        type: integer
-                        description: 'Vendor ID
-
-
-                          Organization ID'
-                      vendor_name:
-                        type: string
-                        description: Vendor Name
-                        maxLength: 200
-                      address_1:
-                        type: string
-                        description: Address 1
-                        maxLength: 200
-                      address_2:
-                        type: string
-                        description: Address 2
-                        maxLength: 200
-                      address_3:
-                        type: string
-                        description: Address 3
-                        maxLength: 200
-                      city:
-                        type: string
-                        description: City
-                        maxLength: 50
-                      state_province:
-                        type: string
-                        description: State/Province
-                        maxLength: 50
-                      postal_code:
-                        type: string
-                        description: Postal Code
-                        maxLength: 20
-                      country:
-                        type: integer
-                        description: Country
-                      email:
-                        type: string
-                        description: 'Email
-
-
-                          A generic email for an organization'
-                        maxLength: 100
-                      bank_account:
-                        type: string
-                        description: 'Direct Deposit Account
-
-
-                          Bank account number into which payments should be deposited.'
-                        maxLength: 20
-                      routing_number:
-                        type: string
-                        description: 'Direct Deposit Bank
-
-
-                          Routing number for this vendor&#39;s bank'
-                        maxLength: 20
-                      account_number:
-                        type: string
-                        description: Account Number
-                        maxLength: 75
-                      standard_days_to_pay:
-                        type: integer
-                        description: 'Standard Days to Pay
-
-
-                          Standard number of days to pay invoices.'
-                      last_modified_date:
-                        type: string
-                        format: date-time
-                        description: Last Modified Date
-                        readOnly: true
-                      inactive:
-                        type: boolean
-                        description: 'Inactive?
-
-
-                          Is this vendor no longer active with our school?'
-                      vendor_tax_info:
-                        type: string
-                        description: Vendor Tax Info
-                        readOnly: true
-                      federal_tax_id:
-                        type: string
-                        description: 'Federal Tax ID
-
-
-                          Tax ID is necessary for vendors that require 1099&#39;s at year end.'
-                        maxLength: 20
-                    required:
-                    - vendor_id
-                    - vendor_name
-                    - address_1
-                    - address_2
-                    - address_3
-                    - city
-                    - state_province
-                    - postal_code
-                    - country
-                    - email
-                    - bank_account
-                    - routing_number
-                    - account_number
-                    - standard_days_to_pay
-                    - last_modified_date
-                    - inactive
-                    - vendor_tax_info
-                    - federal_tax_id
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - country
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.vendors:read
-    patch:
-      tags:
-      - 'Finance: Vendors'
-      summary: 'Update Finance: Vendors'
-      operationId: update_finance_vendors
-      parameters:
-      - name: id
-        in: path
-        description: 'Vendor ID
-
-
-          Organization ID'
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    vendor_id:
-                      type: integer
-                      description: 'Vendor ID
-
-
-                        Organization ID'
-                    vendor_name:
-                      type: string
-                      description: Vendor Name
-                      maxLength: 200
-                    address_1:
-                      type: string
-                      description: Address 1
-                      maxLength: 200
-                    address_2:
-                      type: string
-                      description: Address 2
-                      maxLength: 200
-                    address_3:
-                      type: string
-                      description: Address 3
-                      maxLength: 200
-                    city:
-                      type: string
-                      description: City
-                      maxLength: 50
-                    state_province:
-                      type: string
-                      description: State/Province
-                      maxLength: 50
-                    postal_code:
-                      type: string
-                      description: Postal Code
-                      maxLength: 20
-                    country:
-                      type: integer
-                      description: Country
-                    email:
-                      type: string
-                      description: 'Email
-
-
-                        A generic email for an organization'
-                      maxLength: 100
-                    bank_account:
-                      type: string
-                      description: 'Direct Deposit Account
-
-
-                        Bank account number into which payments should be deposited.'
-                      maxLength: 20
-                    routing_number:
-                      type: string
-                      description: 'Direct Deposit Bank
-
-
-                        Routing number for this vendor&#39;s bank'
-                      maxLength: 20
-                    account_number:
-                      type: string
-                      description: Account Number
-                      maxLength: 75
-                    standard_days_to_pay:
-                      type: integer
-                      description: 'Standard Days to Pay
-
-
-                        Standard number of days to pay invoices.'
-                    last_modified_date:
-                      type: string
-                      format: date-time
-                      description: Last Modified Date
-                      readOnly: true
-                    inactive:
-                      type: boolean
-                      description: 'Inactive?
-
-
-                        Is this vendor no longer active with our school?'
-                    vendor_tax_info:
-                      type: string
-                      description: Vendor Tax Info
-                      readOnly: true
-                    federal_tax_id:
-                      type: string
-                      description: 'Federal Tax ID
-
-
-                        Tax ID is necessary for vendors that require 1099&#39;s at year end.'
-                      maxLength: 20
-              required:
-              - data
-      responses:
-        '204':
-          description: No Content
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.vendors:update
   /health/all_patients/conditions:
     get:
       tags:
@@ -52717,337 +53254,6 @@ paths:
       security:
       - access_token:
         - health.patients.medications:list
-  /finance/ap_disbursements:
-    post:
-      tags:
-      - 'Finance: AP Disbursements'
-      summary: 'Create Finance: AP Disbursements'
-      operationId: create_finance_ap_disbursements
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    disbursement_id:
-                      type: integer
-                      description: Disbursement Header
-                      readOnly: true
-                    check_reference_number:
-                      type: integer
-                      description: Check/Reference Number
-                    description:
-                      type: string
-                      description: Description
-                      maxLength: 80
-                    disbursement_date:
-                      type: string
-                      format: date
-                      description: Disbursement Date
-                    disbursement_category:
-                      type: integer
-                      description: Disbursement Category
-                    disbursement_type:
-                      type: integer
-                      description: Disbursement Type
-                    vendor_id:
-                      type: integer
-                      description: Vendor ID
-                    cash_gl_account_id:
-                      type: integer
-                      description: Cash GL Account ID
-                    payee_name:
-                      type: string
-                      description: Payee Name
-                      maxLength: 200
-                    amount:
-                      type: number
-                      description: Amount
-                    cleared:
-                      type: boolean
-                      description: Cleared (H)?
-              required:
-              - data
-      responses:
-        '201':
-          description: Created
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties: {}
-                    required:
-                    - id
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_disbursements:create
-    get:
-      tags:
-      - 'Finance: AP Disbursements'
-      summary: 'List Finance: AP Disbursements'
-      operationId: list_finance_ap_disbursements
-      parameters:
-      - name: on_or_after_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_before_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        disbursement_id:
-                          type: integer
-                          description: Disbursement Header
-                          readOnly: true
-                        description:
-                          type: string
-                          description: Description
-                          maxLength: 80
-                        check_reference_number:
-                          type: integer
-                          description: Check/Reference Number
-                        disbursement_date:
-                          type: string
-                          format: date
-                          description: Disbursement Date
-                        disbursement_category:
-                          type: integer
-                          description: Disbursement Category
-                        disbursement_type:
-                          type: integer
-                          description: Disbursement Type
-                        vendor:
-                          type: string
-                          description: Organization
-                          maxLength: 200
-                        vendor_id:
-                          type: integer
-                          description: Vendor ID
-                        cash_gl_account:
-                          type: string
-                          description: GL Account
-                          readOnly: true
-                        cash_gl_account_id:
-                          type: integer
-                          description: Cash GL Account ID
-                        payee_name:
-                          type: string
-                          description: Payee Name
-                          maxLength: 200
-                        amount:
-                          type: number
-                          description: Amount - Read Only
-                          readOnly: true
-                        posting_date:
-                          type: string
-                          format: date
-                          description: Posting Date - Read Only
-                          readOnly: true
-                        je_ref_id:
-                          type: string
-                          description: 'JE Ref # - Read Only'
-                          readOnly: true
-                        cleared:
-                          type: boolean
-                          description: Cleared (H)?
-                        void:
-                          type: boolean
-                          description: Void? - Read Only
-                          readOnly: true
-                        entered_as_void:
-                          type: boolean
-                          description: Entered As Void? - Read Only
-                          readOnly: true
-                        input_date:
-                          type: string
-                          format: date-time
-                          description: Input Date
-                        last_modified_date:
-                          type: string
-                          format: date-time
-                          description: Last Modified Date
-                          readOnly: true
-                      required:
-                      - disbursement_id
-                      - description
-                      - check_reference_number
-                      - disbursement_date
-                      - disbursement_category
-                      - disbursement_type
-                      - vendor
-                      - vendor_id
-                      - cash_gl_account
-                      - cash_gl_account_id
-                      - payee_name
-                      - amount
-                      - posting_date
-                      - je_ref_id
-                      - cleared
-                      - void
-                      - entered_as_void
-                      - input_date
-                      - last_modified_date
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - disbursement_category
-                            - disbursement_type
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_disbursements:list
   /health/patients:
     get:
       tags:
@@ -72239,6 +72445,12 @@ paths:
                       cleared:
                         type: boolean
                         description: Cleared (H)?
+                      settled:
+                        type: boolean
+                        description: 'Settled?
+
+
+                          Indicates whether the vendor has received the disbursed funds.'
                       void:
                         type: boolean
                         description: Void? - Read Only
@@ -72272,6 +72484,7 @@ paths:
                     - posting_date
                     - je_ref_id
                     - cleared
+                    - settled
                     - void
                     - entered_as_void
                     - input_date
@@ -72442,6 +72655,12 @@ paths:
                     cleared:
                       type: boolean
                       description: Cleared (H)?
+                    settled:
+                      type: boolean
+                      description: 'Settled?
+
+
+                        Indicates whether the vendor has received the disbursed funds.'
                     void:
                       type: boolean
                       description: Void? - Read Only
@@ -78858,6 +79077,7 @@ components:
             person_accounts:delete: Delete Person Accounts
             person_accounts:list: List Person Accounts
             person_accounts:read: Read Person Accounts
+            person_accounts:update: Update Person Accounts
             person_accounts:create: Create Person Accounts
             person_citizenships:list: List Person Citizenships
             person_citizenships:read: Read Person Citizenships

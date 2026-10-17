@@ -44,6 +44,11 @@ jobs:
       - name: Commit and push
         if: steps.check.outputs.changed == 'true'
         run: |
+          # The runner has no git identity by default, so `git commit` fails with
+          # "Author identity unknown / fatal: empty ident name not allowed".
+          # Set a deterministic bot identity so the sync commit can be authored.
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then
             echo "Re-mirror produced no file changes; nothing to push."
