@@ -2,6 +2,53 @@
 
 ## October 2026
 
+### 2026-10-19
+
+#### Other Changes
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | A breaking change was detected but the version is still `3.0.0` |
+
+#### GET /academics/classes
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added `grading_period_group_id` enum value to the `value_lists.items.fields.items` response property for the response status `200` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.grading_period_group_id` to the response with the `200` status |
+
+#### GET /academics/classes/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added `grading_period_group_id` enum value to the `value_lists.items.fields.items` response property for the response status `200` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.grading_period_group_id` to the response with the `200` status |
+
+#### GET /academics/config/grading_periods
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added optional `query` request parameter `active` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.active` to the response with the `200` status |
+
+#### GET /academics/config/grading_periods/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.active` to the response with the `200` status |
+
+#### PATCH /academics/classes/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.grading_period_group_id` |
+
+#### POST /academics/classes
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.grading_period_group_id` |
+
 ### 2026-10-15
 
 #### Other Changes
@@ -515,52 +562,6 @@
 |----|-------------|
 | <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.biography` response property's maxlength was increased from `3000` to `4000` for the response status `200` |
 | <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.photo_url` response property's maxlength was unset from `250` for the response status `200` |
-
-### 2026-07-28
-
-#### GET /finance/ap_disbursements
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | For the `query` request parameter `on_or_after_last_modified_date`, the `format` was widened from `date` to `date-time` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | For the `query` request parameter `on_or_before_last_modified_date`, the `format` was widened from `date` to `date-time` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.input_date` response's property `format` changed from `date` to `date-time` for status `200` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.last_modified_date` response's property `format` changed from `date` to `date-time` for status `200` |
-
-#### GET /finance/ap_disbursements/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.input_date` response's property `format` changed from `date` to `date-time` for status `200` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.last_modified_date` response's property `format` changed from `date` to `date-time` for status `200` |
-
-#### GET /finance/ap_invoices
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | For the `query` request parameter `on_or_after_last_modified_date`, the `format` was widened from `date` to `date-time` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | For the `query` request parameter `on_or_before_last_modified_date`, the `format` was widened from `date` to `date-time` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.last_modified_date` response's property `format` changed from `date` to `date-time` for status `200` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.input_date` to the response with the `200` status |
-
-#### GET /finance/ap_invoices/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.last_modified_date` response's property `format` changed from `date` to `date-time` for status `200` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.input_date` to the response with the `200` status |
-
-#### PATCH /finance/ap_disbursements/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.input_date` request property `format` was widened from `date` to `date-time` |
-
-#### PATCH /finance/ap_invoices/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.input_date` |
 
 ### Older updates
 

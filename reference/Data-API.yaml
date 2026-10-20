@@ -10701,589 +10701,6 @@ paths:
       security:
       - access_token:
         - person_accounts:list
-  /academics/classes:
-    post:
-      tags:
-      - 'Academics: Classes'
-      summary: 'Create Academics: Classes'
-      operationId: create_academics_classes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    class_id:
-                      type: string
-                      description: "Class ID\n\nClass ID associated with this class. School-defined value. Must be unique in the school year. Special characters, punctuation, and spaces are not sufficient for uniqueness. \n\n\n\nExample: GYM 1 and GYM: 1 are not unique. GYM 1a and GYM 1b are unique."
-                      maxLength: 20
-                    description:
-                      type: string
-                      description: Description
-                      maxLength: 80
-                    status:
-                      type: integer
-                      description: 'Status
-
-
-                        Status of the class (active, future, etc.)'
-                    school_year:
-                      type: integer
-                      description: School Year
-                    begin_date:
-                      type: string
-                      format: date
-                      description: Begin Date
-                    end_date:
-                      type: string
-                      format: date
-                      description: End Date
-                    primary_grade_level_id:
-                      type: integer
-                      description: Primary Grade Level ID
-                    school_level:
-                      type: integer
-                      description: School Level
-                    internal_course_id:
-                      type: integer
-                      description: Course ID
-                    primary_teacher_id:
-                      type: integer
-                      description: Teacher ID
-                    room_id:
-                      type: integer
-                      description: Room ID
-                    virtual_meeting_url:
-                      type: string
-                      description: 'Virtual Meeting URL
-
-
-                        To toggle the display of this field in the daily student/faculty schedule, update the configuration on the Website Configuration tab.'
-                      maxLength: 2000
-                    subject_id:
-                      type: integer
-                      description: Subject
-                    department_id:
-                      type: integer
-                      description: ID
-                      readOnly: true
-                    internal_group_id:
-                      type: integer
-                      description: System Group ID
-                    parent_portal_visibility:
-                      type: integer
-                      description: 'Parent Portal Visibility
-
-
-                        Indicates whether this class will display on the Parent Portal'
-                    parent_portal_assignment_display:
-                      type: integer
-                      description: 'Parent Portal Assignment Display
-
-
-                        Indicates whether assigments and assignment grades display on the Parent Portal'
-                    student_portal_visibility:
-                      type: integer
-                      description: 'Student Portal Visibility
-
-
-                        Indicates whether this class will display on the Student Portal'
-                    student_portal_assignment_display:
-                      type: integer
-                      description: 'Student Portal Assignment Display
-
-
-                        Indicates whether assigments and assignment grades display on the Student Portal'
-                    track_class_attendance:
-                      type: boolean
-                      description: 'Track Class Attendance
-
-
-                        Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
-                    trigger_imperfect_attendance:
-                      type: boolean
-                      description: 'Trigger Imperfect Attendance
-
-
-                        When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
-                    last_modified_date:
-                      type: string
-                      format: date-time
-                      description: Last Modified Date
-                      readOnly: true
-                  required:
-                  - class_id
-                  - description
-                  - internal_course_id
-                  - subject_id
-              required:
-              - data
-      responses:
-        '201':
-          description: Created
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties: {}
-                    required:
-                    - id
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.classes:create
-    get:
-      tags:
-      - 'Academics: Classes'
-      summary: 'List Academics: Classes'
-      operationId: list_academics_classes
-      parameters:
-      - name: id
-        in: query
-        description: Internal Class ID
-        schema:
-          type: integer
-      - name: school_year
-        in: query
-        description: School Year
-        schema:
-          type: integer
-      - name: campus_id
-        in: query
-        description: Campus ID
-        schema:
-          type: integer
-      - name: school_level
-        in: query
-        description: School Level
-        schema:
-          type: integer
-      - name: course_type
-        in: query
-        description: Course Type
-        schema:
-          type: integer
-      - name: internal_course_id
-        in: query
-        description: Internal Course ID
-        schema:
-          type: integer
-      - name: primary_teacher_id
-        in: query
-        description: Teacher ID
-        schema:
-          type: integer
-      - name: room_id
-        in: query
-        description: Room ID
-        schema:
-          type: integer
-      - name: internal_group_id
-        in: query
-        description: System Group ID
-        schema:
-          type: integer
-      - name: parent_portal_visibility
-        in: query
-        description: 'Parent Portal Visibility
-
-
-          Indicates whether this class will display on the Parent Portal'
-        schema:
-          type: integer
-      - name: parent_portal_assignment_display
-        in: query
-        description: 'Parent Portal Assignment Display
-
-
-          Indicates whether assigments and assignment grades display on the Parent Portal'
-        schema:
-          type: integer
-      - name: student_portal_visibility
-        in: query
-        description: 'Student Portal Visibility
-
-
-          Indicates whether this class will display on the Student Portal'
-        schema:
-          type: integer
-      - name: student_portal_assignment_display
-        in: query
-        description: 'Student Portal Assignment Display
-
-
-          Indicates whether assigments and assignment grades display on the Student Portal'
-        schema:
-          type: integer
-      - name: track_class_attendance
-        in: query
-        description: 'Track Class Attendance
-
-
-          Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
-        schema:
-          type: boolean
-      - name: trigger_imperfect_attendance
-        in: query
-        description: 'Trigger Imperfect Attendance
-
-
-          When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
-        schema:
-          type: boolean
-      - name: on_or_before_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_after_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        class_id:
-                          type: string
-                          description: "Class ID\n\nClass ID associated with this class. School-defined value. Must be unique in the school year. Special characters, punctuation, and spaces are not sufficient for uniqueness. \n\n\n\nExample: GYM 1 and GYM: 1 are not unique. GYM 1a and GYM 1b are unique."
-                          maxLength: 20
-                        description:
-                          type: string
-                          description: Description
-                          maxLength: 80
-                        status:
-                          type: integer
-                          description: 'Status
-
-
-                            Status of the class (active, future, etc.)'
-                        school_year:
-                          type: integer
-                          description: School Year
-                        campus_id:
-                          type: integer
-                          description: Campus ID
-                        campus_description:
-                          type: string
-                          description: Description
-                          maxLength: 50
-                        begin_date:
-                          type: string
-                          format: date
-                          description: Begin Date
-                        end_date:
-                          type: string
-                          format: date
-                          description: End Date
-                        primary_grade_level_id:
-                          type: integer
-                          description: Primary Grade Level ID
-                        school_level:
-                          type: integer
-                          description: School Level
-                        course_type:
-                          type: integer
-                          description: Course Type
-                        internal_course_id:
-                          type: integer
-                          description: Course ID
-                        course:
-                          type: object
-                          properties:
-                            course_id:
-                              type: string
-                              description: Course ID
-                              maxLength: 15
-                            course_name:
-                              type: string
-                              description: Course Name
-                              maxLength: 100
-                          required:
-                          - id
-                          - course_id
-                          - course_name
-                        primary_teacher_id:
-                          type: integer
-                          description: Teacher ID
-                        primary_teacher_name:
-                          type: string
-                          description: Teacher
-                          readOnly: true
-                        room_id:
-                          type: integer
-                          description: Room ID
-                        virtual_meeting_url:
-                          type: string
-                          description: 'Virtual Meeting URL
-
-
-                            To toggle the display of this field in the daily student/faculty schedule, update the configuration on the Website Configuration tab.'
-                          maxLength: 2000
-                        subject_id:
-                          type: integer
-                          description: Subject
-                        subject_description:
-                          type: string
-                          description: Description
-                          maxLength: 50
-                        department_id:
-                          type: integer
-                          description: ID
-                          readOnly: true
-                        department_description:
-                          type: string
-                          description: Description
-                          maxLength: 100
-                        internal_group_id:
-                          type: integer
-                          description: System Group ID
-                        term_credit_hours:
-                          type: number
-                          description: 'Term Credit Hours
-
-
-                            The number of credit hours awarded per term.  Used to calculate GPA as well as determine credits earned values.'
-                        total_credits:
-                          type: number
-                          description: Total Credits
-                          readOnly: true
-                        parent_portal_visibility:
-                          type: integer
-                          description: 'Parent Portal Visibility
-
-
-                            Indicates whether this class will display on the Parent Portal'
-                        parent_portal_assignment_display:
-                          type: integer
-                          description: 'Parent Portal Assignment Display
-
-
-                            Indicates whether assigments and assignment grades display on the Parent Portal'
-                        student_portal_visibility:
-                          type: integer
-                          description: 'Student Portal Visibility
-
-
-                            Indicates whether this class will display on the Student Portal'
-                        student_portal_assignment_display:
-                          type: integer
-                          description: 'Student Portal Assignment Display
-
-
-                            Indicates whether assigments and assignment grades display on the Student Portal'
-                        track_class_attendance:
-                          type: boolean
-                          description: 'Track Class Attendance
-
-
-                            Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
-                        trigger_imperfect_attendance:
-                          type: boolean
-                          description: 'Trigger Imperfect Attendance
-
-
-                            When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
-                        last_modified_date:
-                          type: string
-                          format: date-time
-                          description: Last Modified Date
-                          readOnly: true
-                      required:
-                      - id
-                      - class_id
-                      - description
-                      - status
-                      - school_year
-                      - campus_id
-                      - campus_description
-                      - begin_date
-                      - end_date
-                      - primary_grade_level_id
-                      - school_level
-                      - course_type
-                      - internal_course_id
-                      - course
-                      - primary_teacher_id
-                      - primary_teacher_name
-                      - room_id
-                      - virtual_meeting_url
-                      - subject_id
-                      - subject_description
-                      - department_id
-                      - department_description
-                      - internal_group_id
-                      - term_credit_hours
-                      - total_credits
-                      - parent_portal_visibility
-                      - parent_portal_assignment_display
-                      - student_portal_visibility
-                      - student_portal_assignment_display
-                      - track_class_attendance
-                      - trigger_imperfect_attendance
-                      - last_modified_date
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - status
-                            - school_year
-                            - school_level
-                            - course_type
-                            - subject_id
-                            - parent_portal_visibility
-                            - parent_portal_assignment_display
-                            - student_portal_visibility
-                            - student_portal_assignment_display
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.classes:list
   /academics/rubrics:
     get:
       tags:
@@ -33275,6 +32692,597 @@ paths:
       security:
       - access_token:
         - academics.class_schedules:list
+  /academics/classes:
+    get:
+      tags:
+      - 'Academics: Classes'
+      summary: 'List Academics: Classes'
+      operationId: list_academics_classes
+      parameters:
+      - name: id
+        in: query
+        description: Internal Class ID
+        schema:
+          type: integer
+      - name: school_year
+        in: query
+        description: School Year
+        schema:
+          type: integer
+      - name: campus_id
+        in: query
+        description: Campus ID
+        schema:
+          type: integer
+      - name: school_level
+        in: query
+        description: School Level
+        schema:
+          type: integer
+      - name: course_type
+        in: query
+        description: Course Type
+        schema:
+          type: integer
+      - name: internal_course_id
+        in: query
+        description: Internal Course ID
+        schema:
+          type: integer
+      - name: primary_teacher_id
+        in: query
+        description: Teacher ID
+        schema:
+          type: integer
+      - name: room_id
+        in: query
+        description: Room ID
+        schema:
+          type: integer
+      - name: internal_group_id
+        in: query
+        description: System Group ID
+        schema:
+          type: integer
+      - name: parent_portal_visibility
+        in: query
+        description: 'Parent Portal Visibility
+
+
+          Indicates whether this class will display on the Parent Portal'
+        schema:
+          type: integer
+      - name: parent_portal_assignment_display
+        in: query
+        description: 'Parent Portal Assignment Display
+
+
+          Indicates whether assigments and assignment grades display on the Parent Portal'
+        schema:
+          type: integer
+      - name: student_portal_visibility
+        in: query
+        description: 'Student Portal Visibility
+
+
+          Indicates whether this class will display on the Student Portal'
+        schema:
+          type: integer
+      - name: student_portal_assignment_display
+        in: query
+        description: 'Student Portal Assignment Display
+
+
+          Indicates whether assigments and assignment grades display on the Student Portal'
+        schema:
+          type: integer
+      - name: track_class_attendance
+        in: query
+        description: 'Track Class Attendance
+
+
+          Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
+        schema:
+          type: boolean
+      - name: trigger_imperfect_attendance
+        in: query
+        description: 'Trigger Imperfect Attendance
+
+
+          When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
+        schema:
+          type: boolean
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        class_id:
+                          type: string
+                          description: "Class ID\n\nClass ID associated with this class. School-defined value. Must be unique in the school year. Special characters, punctuation, and spaces are not sufficient for uniqueness. \n\n\n\nExample: GYM 1 and GYM: 1 are not unique. GYM 1a and GYM 1b are unique."
+                          maxLength: 20
+                        description:
+                          type: string
+                          description: Description
+                          maxLength: 80
+                        status:
+                          type: integer
+                          description: 'Status
+
+
+                            Status of the class (active, future, etc.)'
+                        school_year:
+                          type: integer
+                          description: School Year
+                        campus_id:
+                          type: integer
+                          description: Campus ID
+                        campus_description:
+                          type: string
+                          description: Description
+                          maxLength: 50
+                        begin_date:
+                          type: string
+                          format: date
+                          description: Begin Date
+                        end_date:
+                          type: string
+                          format: date
+                          description: End Date
+                        primary_grade_level_id:
+                          type: integer
+                          description: Primary Grade Level ID
+                        school_level:
+                          type: integer
+                          description: School Level
+                        course_type:
+                          type: integer
+                          description: Course Type
+                        internal_course_id:
+                          type: integer
+                          description: Course ID
+                        course:
+                          type: object
+                          properties:
+                            course_id:
+                              type: string
+                              description: Course ID
+                              maxLength: 15
+                            course_name:
+                              type: string
+                              description: Course Name
+                              maxLength: 100
+                          required:
+                          - id
+                          - course_id
+                          - course_name
+                        primary_teacher_id:
+                          type: integer
+                          description: Teacher ID
+                        primary_teacher_name:
+                          type: string
+                          description: Teacher
+                          readOnly: true
+                        room_id:
+                          type: integer
+                          description: Room ID
+                        virtual_meeting_url:
+                          type: string
+                          description: 'Virtual Meeting URL
+
+
+                            To toggle the display of this field in the daily student/faculty schedule, update the configuration on the Website Configuration tab.'
+                          maxLength: 2000
+                        subject_id:
+                          type: integer
+                          description: Subject
+                        subject_description:
+                          type: string
+                          description: Description
+                          maxLength: 50
+                        department_id:
+                          type: integer
+                          description: ID
+                          readOnly: true
+                        department_description:
+                          type: string
+                          description: Description
+                          maxLength: 100
+                        internal_group_id:
+                          type: integer
+                          description: System Group ID
+                        term_credit_hours:
+                          type: number
+                          description: 'Term Credit Hours
+
+
+                            The number of credit hours awarded per term.  Used to calculate GPA as well as determine credits earned values.'
+                        total_credits:
+                          type: number
+                          description: Total Credits
+                          readOnly: true
+                        parent_portal_visibility:
+                          type: integer
+                          description: 'Parent Portal Visibility
+
+
+                            Indicates whether this class will display on the Parent Portal'
+                        parent_portal_assignment_display:
+                          type: integer
+                          description: 'Parent Portal Assignment Display
+
+
+                            Indicates whether assigments and assignment grades display on the Parent Portal'
+                        student_portal_visibility:
+                          type: integer
+                          description: 'Student Portal Visibility
+
+
+                            Indicates whether this class will display on the Student Portal'
+                        student_portal_assignment_display:
+                          type: integer
+                          description: 'Student Portal Assignment Display
+
+
+                            Indicates whether assigments and assignment grades display on the Student Portal'
+                        track_class_attendance:
+                          type: boolean
+                          description: 'Track Class Attendance
+
+
+                            Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
+                        trigger_imperfect_attendance:
+                          type: boolean
+                          description: 'Trigger Imperfect Attendance
+
+
+                            When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                        grading_period_group_id:
+                          type: integer
+                          description: Grading Period Group
+                      required:
+                      - id
+                      - class_id
+                      - description
+                      - status
+                      - school_year
+                      - campus_id
+                      - campus_description
+                      - begin_date
+                      - end_date
+                      - primary_grade_level_id
+                      - school_level
+                      - course_type
+                      - internal_course_id
+                      - course
+                      - primary_teacher_id
+                      - primary_teacher_name
+                      - room_id
+                      - virtual_meeting_url
+                      - subject_id
+                      - subject_description
+                      - department_id
+                      - department_description
+                      - internal_group_id
+                      - term_credit_hours
+                      - total_credits
+                      - parent_portal_visibility
+                      - parent_portal_assignment_display
+                      - student_portal_visibility
+                      - student_portal_assignment_display
+                      - track_class_attendance
+                      - trigger_imperfect_attendance
+                      - last_modified_date
+                      - grading_period_group_id
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - status
+                            - school_year
+                            - school_level
+                            - course_type
+                            - subject_id
+                            - parent_portal_visibility
+                            - parent_portal_assignment_display
+                            - student_portal_visibility
+                            - student_portal_assignment_display
+                            - grading_period_group_id
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.classes:list
+    post:
+      tags:
+      - 'Academics: Classes'
+      summary: 'Create Academics: Classes'
+      operationId: create_academics_classes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    class_id:
+                      type: string
+                      description: "Class ID\n\nClass ID associated with this class. School-defined value. Must be unique in the school year. Special characters, punctuation, and spaces are not sufficient for uniqueness. \n\n\n\nExample: GYM 1 and GYM: 1 are not unique. GYM 1a and GYM 1b are unique."
+                      maxLength: 20
+                    description:
+                      type: string
+                      description: Description
+                      maxLength: 80
+                    status:
+                      type: integer
+                      description: 'Status
+
+
+                        Status of the class (active, future, etc.)'
+                    school_year:
+                      type: integer
+                      description: School Year
+                    begin_date:
+                      type: string
+                      format: date
+                      description: Begin Date
+                    end_date:
+                      type: string
+                      format: date
+                      description: End Date
+                    primary_grade_level_id:
+                      type: integer
+                      description: Primary Grade Level ID
+                    school_level:
+                      type: integer
+                      description: School Level
+                    internal_course_id:
+                      type: integer
+                      description: Course ID
+                    primary_teacher_id:
+                      type: integer
+                      description: Teacher ID
+                    room_id:
+                      type: integer
+                      description: Room ID
+                    virtual_meeting_url:
+                      type: string
+                      description: 'Virtual Meeting URL
+
+
+                        To toggle the display of this field in the daily student/faculty schedule, update the configuration on the Website Configuration tab.'
+                      maxLength: 2000
+                    subject_id:
+                      type: integer
+                      description: Subject
+                    department_id:
+                      type: integer
+                      description: ID
+                      readOnly: true
+                    internal_group_id:
+                      type: integer
+                      description: System Group ID
+                    parent_portal_visibility:
+                      type: integer
+                      description: 'Parent Portal Visibility
+
+
+                        Indicates whether this class will display on the Parent Portal'
+                    parent_portal_assignment_display:
+                      type: integer
+                      description: 'Parent Portal Assignment Display
+
+
+                        Indicates whether assigments and assignment grades display on the Parent Portal'
+                    student_portal_visibility:
+                      type: integer
+                      description: 'Student Portal Visibility
+
+
+                        Indicates whether this class will display on the Student Portal'
+                    student_portal_assignment_display:
+                      type: integer
+                      description: 'Student Portal Assignment Display
+
+
+                        Indicates whether assigments and assignment grades display on the Student Portal'
+                    track_class_attendance:
+                      type: boolean
+                      description: 'Track Class Attendance
+
+
+                        Indicates whether to maintain Class-level attendance for this class in addition to Daily attendance'
+                    trigger_imperfect_attendance:
+                      type: boolean
+                      description: 'Trigger Imperfect Attendance
+
+
+                        When selected, if a student&#39;s attendance status for this class is in conflict with their daily attendance status, the Daily Attendance status will be updated to &quot;Imperfect Class Attendance&quot;. The most common reason to deselect this field is if this class is an after school activity or athletic team whose attendance isn&#39;t relevant to Daily Attendance. (This option only matters if &quot;Track Attendance&quot; is selected.)'
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+                    grading_period_group_id:
+                      type: integer
+                      description: Grading Period Group
+                  required:
+                  - class_id
+                  - description
+                  - internal_course_id
+                  - subject_id
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.classes:create
   /academics/permissions:
     get:
       tags:
@@ -34293,412 +34301,6 @@ paths:
       security:
       - access_token:
         - academics.departments:read
-  /academics/config/grading_periods:
-    get:
-      tags:
-      - 'Academics: Grading Periods'
-      summary: 'List Academics: Grading Periods'
-      operationId: list_academics_grading_periods
-      parameters:
-      - name: group_id
-        in: query
-        description: ID
-        schema:
-          type: integer
-      - name: school_year
-        in: query
-        description: School Year
-        schema:
-          type: integer
-      - name: on_or_before_start_date
-        in: query
-        description: Begin Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_after_start_date
-        in: query
-        description: Begin Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_before_end_date
-        in: query
-        description: End Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_after_end_date
-        in: query
-        description: End Date
-        schema:
-          type: string
-          format: date-time
-      - name: last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_before_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_after_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        description:
-                          type: string
-                          description: Description
-                          maxLength: 50
-                        abbreviation:
-                          type: string
-                          description: Abbreviation
-                          maxLength: 20
-                        start_date:
-                          type: string
-                          format: date-time
-                          description: Begin Date
-                        end_date:
-                          type: string
-                          format: date-time
-                          description: End Date
-                        group:
-                          type: object
-                          properties:
-                            description:
-                              type: string
-                              description: Description
-                              maxLength: 50
-                            type:
-                              type: integer
-                              description: Group Type
-                          required:
-                          - id
-                          - description
-                          - type
-                        major:
-                          type: boolean
-                          description: Major
-                        minor:
-                          type: boolean
-                          description: Minor
-                        period_index:
-                          type: integer
-                          description: Period Index
-                        school_year:
-                          type: integer
-                          description: School Year
-                        last_modified_date:
-                          type: string
-                          format: date-time
-                          description: Last Modified Date
-                          readOnly: true
-                      required:
-                      - id
-                      - description
-                      - abbreviation
-                      - start_date
-                      - end_date
-                      - group
-                      - major
-                      - minor
-                      - period_index
-                      - school_year
-                      - last_modified_date
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - group.type
-                            - school_year
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.config.grading_periods:list
-  /academics/config/grading_periods/{id}:
-    get:
-      tags:
-      - 'Academics: Grading Periods'
-      summary: 'Read Academics: Grading Periods'
-      operationId: read_academics_grading_periods
-      parameters:
-      - name: id
-        in: path
-        description: ID
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      description:
-                        type: string
-                        description: Description
-                        maxLength: 50
-                      abbreviation:
-                        type: string
-                        description: Abbreviation
-                        maxLength: 20
-                      start_date:
-                        type: string
-                        format: date-time
-                        description: Begin Date
-                      end_date:
-                        type: string
-                        format: date-time
-                        description: End Date
-                      group:
-                        type: object
-                        properties:
-                          description:
-                            type: string
-                            description: Description
-                            maxLength: 50
-                          type:
-                            type: integer
-                            description: Group Type
-                        required:
-                        - id
-                        - description
-                        - type
-                      major:
-                        type: boolean
-                        description: Major
-                      minor:
-                        type: boolean
-                        description: Minor
-                      period_index:
-                        type: integer
-                        description: Period Index
-                      school_year:
-                        type: integer
-                        description: School Year
-                      last_modified_date:
-                        type: string
-                        format: date-time
-                        description: Last Modified Date
-                        readOnly: true
-                    required:
-                    - id
-                    - description
-                    - abbreviation
-                    - start_date
-                    - end_date
-                    - group
-                    - major
-                    - minor
-                    - period_index
-                    - school_year
-                    - last_modified_date
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - group.type
-                            - school_year
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.config.grading_periods:read
   /academics/numeric_grades/{id}:
     get:
       tags:
@@ -35745,6 +35347,243 @@ paths:
       security:
       - access_token:
         - academics.qualitative_grades:update
+  /academics/config/grading_periods:
+    get:
+      tags:
+      - 'Academics: Grading Periods'
+      summary: 'List Academics: Grading Periods'
+      operationId: list_academics_grading_periods
+      parameters:
+      - name: group_id
+        in: query
+        description: ID
+        schema:
+          type: integer
+      - name: active
+        in: query
+        description: Is Active
+        schema:
+          type: boolean
+      - name: school_year
+        in: query
+        description: School Year
+        schema:
+          type: integer
+      - name: on_or_before_start_date
+        in: query
+        description: Begin Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_after_start_date
+        in: query
+        description: Begin Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_end_date
+        in: query
+        description: End Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_after_end_date
+        in: query
+        description: End Date
+        schema:
+          type: string
+          format: date-time
+      - name: last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        description:
+                          type: string
+                          description: Description
+                          maxLength: 50
+                        abbreviation:
+                          type: string
+                          description: Abbreviation
+                          maxLength: 20
+                        start_date:
+                          type: string
+                          format: date-time
+                          description: Begin Date
+                        end_date:
+                          type: string
+                          format: date-time
+                          description: End Date
+                        group:
+                          type: object
+                          properties:
+                            description:
+                              type: string
+                              description: Description
+                              maxLength: 50
+                            type:
+                              type: integer
+                              description: Group Type
+                          required:
+                          - id
+                          - description
+                          - type
+                        active:
+                          type: boolean
+                          description: Is Active
+                          readOnly: true
+                        major:
+                          type: boolean
+                          description: Major
+                        minor:
+                          type: boolean
+                          description: Minor
+                        period_index:
+                          type: integer
+                          description: Period Index
+                        school_year:
+                          type: integer
+                          description: School Year
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                      required:
+                      - id
+                      - description
+                      - abbreviation
+                      - start_date
+                      - end_date
+                      - group
+                      - active
+                      - major
+                      - minor
+                      - period_index
+                      - school_year
+                      - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - group.type
+                            - school_year
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.config.grading_periods:list
   /academics/qualitative_grades:
     get:
       tags:
@@ -76499,6 +76338,190 @@ paths:
       security:
       - access_token:
         - academics.rooms:read
+  /academics/config/grading_periods/{id}:
+    get:
+      tags:
+      - 'Academics: Grading Periods'
+      summary: 'Read Academics: Grading Periods'
+      operationId: read_academics_grading_periods
+      parameters:
+      - name: id
+        in: path
+        description: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                        description: Description
+                        maxLength: 50
+                      abbreviation:
+                        type: string
+                        description: Abbreviation
+                        maxLength: 20
+                      start_date:
+                        type: string
+                        format: date-time
+                        description: Begin Date
+                      end_date:
+                        type: string
+                        format: date-time
+                        description: End Date
+                      group:
+                        type: object
+                        properties:
+                          description:
+                            type: string
+                            description: Description
+                            maxLength: 50
+                          type:
+                            type: integer
+                            description: Group Type
+                        required:
+                        - id
+                        - description
+                        - type
+                      active:
+                        type: boolean
+                        description: Is Active
+                        readOnly: true
+                      major:
+                        type: boolean
+                        description: Major
+                      minor:
+                        type: boolean
+                        description: Minor
+                      period_index:
+                        type: integer
+                        description: Period Index
+                      school_year:
+                        type: integer
+                        description: School Year
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                    required:
+                    - id
+                    - description
+                    - abbreviation
+                    - start_date
+                    - end_date
+                    - group
+                    - active
+                    - major
+                    - minor
+                    - period_index
+                    - school_year
+                    - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - group.type
+                            - school_year
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.config.grading_periods:read
   /finance/tax_types:
     get:
       tags:
@@ -77384,6 +77407,9 @@ paths:
                         format: date-time
                         description: Last Modified Date
                         readOnly: true
+                      grading_period_group_id:
+                        type: integer
+                        description: Grading Period Group
                     required:
                     - id
                     - class_id
@@ -77408,6 +77434,7 @@ paths:
                     - track_class_attendance
                     - trigger_imperfect_attendance
                     - last_modified_date
+                    - grading_period_group_id
                   value_lists:
                     type: array
                     description: Present only with header `X-API-Value-Lists = include`
@@ -77429,6 +77456,7 @@ paths:
                             - parent_portal_assignment_display
                             - student_portal_visibility
                             - student_portal_assignment_display
+                            - grading_period_group_id
                         items:
                           type: array
                           description: An array of value list items whose `id` field matches the value in the response data
@@ -77623,6 +77651,9 @@ paths:
                       format: date-time
                       description: Last Modified Date
                       readOnly: true
+                    grading_period_group_id:
+                      type: integer
+                      description: Grading Period Group
               required:
               - data
       responses:
