@@ -2,6 +2,42 @@
 
 ## October 2026
 
+### 2026-10-20
+
+#### Other Changes
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | A breaking change was detected but the version is still `3.0.0` |
+
+#### GET /finance/ap_invoices
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed property `data.items.external_po_number` from the response with the `200` status |
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed property `data.items.external_po_url` from the response with the `200` status |
+
+#### GET /finance/ap_invoices/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed property `data.external_po_number` from the response with the `200` status |
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed property `data.external_po_url` from the response with the `200` status |
+
+#### PATCH /finance/ap_invoices/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed request property `data.external_po_number` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed request property `data.external_po_url` |
+
+#### POST /finance/ap_invoices
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed request property `data.external_po_number` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed request property `data.external_po_url` |
+
 ### 2026-10-19
 
 #### Other Changes
@@ -553,15 +589,6 @@
 |    | Description |
 |----|-------------|
 | <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.do_not_pay` |
-
-### 2026-07-29
-
-#### GET /directory/staff_faculty
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.biography` response property's maxlength was increased from `3000` to `4000` for the response status `200` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | The `data.items.photo_url` response property's maxlength was unset from `250` for the response status `200` |
 
 ### Older updates
 

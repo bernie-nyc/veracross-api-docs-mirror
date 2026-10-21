@@ -51048,408 +51048,6 @@ paths:
       security:
       - access_token:
         - finance.ap_disbursements:list
-  /finance/ap_invoices:
-    post:
-      tags:
-      - 'Finance: AP Invoices'
-      summary: 'Create Finance: AP Invoices'
-      description: The duplicate (non-shown) ID fields without `_id` are only for backwards compatibility, and should eventually be removed.
-      operationId: create_finance_ap_invoices
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    invoice_id:
-                      type: integer
-                      description: AP Header ID
-                      readOnly: true
-                    invoice_number:
-                      type: string
-                      description: Invoice Number
-                      maxLength: 30
-                    invoice_date:
-                      type: string
-                      format: date
-                      description: Invoice Date
-                    due_date:
-                      type: string
-                      format: date
-                      description: Due Date
-                    description:
-                      type: string
-                      description: Description
-                      maxLength: 80
-                    ap_gl_account_id:
-                      type: integer
-                      description: AP GL Account ID
-                    approval_person_id:
-                      type: integer
-                      description: Approval Person ID
-                    vendor_id:
-                      type: integer
-                      description: Vendor ID
-                    do_not_pay:
-                      type: boolean
-                      description: Do Not Pay?
-                    external_po_number:
-                      type: string
-                      description: External PO Number
-                      maxLength: 60
-                    external_po_url:
-                      type: string
-                      description: External PO Url
-                      maxLength: 500
-                  required:
-                  - invoice_number
-              required:
-              - data
-      responses:
-        '201':
-          description: Created
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties: {}
-                    required:
-                    - id
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_invoices:create
-    get:
-      tags:
-      - 'Finance: AP Invoices'
-      summary: 'List Finance: AP Invoices'
-      operationId: list_finance_ap_invoices
-      parameters:
-      - name: vendor_id
-        in: query
-        description: Vendor ID
-        schema:
-          type: integer
-      - name: unpaid_only
-        in: query
-        description: Unpaid? - Read Only
-        schema:
-          type: boolean
-      - name: on_or_after_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      - name: on_or_before_last_modified_date
-        in: query
-        description: Last Modified Date
-        schema:
-          type: string
-          format: date-time
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        invoice_id:
-                          type: integer
-                          description: AP Header ID
-                          readOnly: true
-                        invoice_number:
-                          type: string
-                          description: Invoice Number
-                          maxLength: 30
-                        vendor:
-                          type: string
-                          description: Vendor
-                        vendor_id:
-                          type: integer
-                          description: Vendor ID
-                        invoice_date:
-                          type: string
-                          format: date
-                          description: Invoice Date
-                        due_date:
-                          type: string
-                          format: date
-                          description: Due Date
-                        posting_date:
-                          type: string
-                          format: date
-                          description: Posting Date - Read Only
-                          readOnly: true
-                        description:
-                          type: string
-                          description: Description
-                          maxLength: 80
-                        ap_gl_account:
-                          type: string
-                          description: AP GL Account
-                          readOnly: true
-                        ap_gl_account_id:
-                          type: integer
-                          description: AP GL Account ID
-                        ap_gl_cost_center:
-                          type: integer
-                          description: AP GL Cost Center - Read Only
-                          readOnly: true
-                        gross_amount:
-                          type: number
-                          description: Gross Amount - Read Only
-                          readOnly: true
-                        as_posted_amount:
-                          type: number
-                          description: As Posted Amount - Read Only
-                          readOnly: true
-                        net_amount_paid:
-                          type: number
-                          description: Net Amount Paid - Read Only
-                          readOnly: true
-                        unpaid_amount:
-                          type: number
-                          description: Unpaid Amount
-                          readOnly: true
-                        fiscal_year:
-                          type: integer
-                          description: Fiscal Year - Read Only
-                          readOnly: true
-                        fiscal_period:
-                          type: integer
-                          description: Fiscal Period - Read Only
-                          readOnly: true
-                        approval_person:
-                          type: string
-                          description: 'Approval Person
-
-
-                            Person who must approve this expense prior to its posting and payment'
-                          readOnly: true
-                        approval_person_id:
-                          type: integer
-                          description: Approval Person ID
-                        cancelled:
-                          type: boolean
-                          description: 'Cancel?
-
-
-                            This option cancels the entire invoice.'
-                        posted:
-                          type: boolean
-                          description: Posted?
-                        do_not_pay:
-                          type: boolean
-                          description: Do Not Pay?
-                        last_modified_date:
-                          type: string
-                          format: date-time
-                          description: Last Modified Date
-                          readOnly: true
-                        tax_type:
-                          type: string
-                          description: Tax Type ID for AP Invoices
-                          readOnly: true
-                        inclusive_exclusive:
-                          type: string
-                          description: Inclusive/Exclusive for AP Invoices
-                          readOnly: true
-                        total_tax:
-                          type: number
-                          description: Total Tax
-                        input_date:
-                          type: string
-                          format: date-time
-                          description: Input Date
-                        external_po_number:
-                          type: string
-                          description: External PO Number
-                          maxLength: 60
-                        external_po_url:
-                          type: string
-                          description: External PO Url
-                          maxLength: 500
-                      required:
-                      - invoice_id
-                      - invoice_number
-                      - vendor
-                      - vendor_id
-                      - invoice_date
-                      - due_date
-                      - posting_date
-                      - description
-                      - ap_gl_account
-                      - ap_gl_account_id
-                      - ap_gl_cost_center
-                      - gross_amount
-                      - as_posted_amount
-                      - net_amount_paid
-                      - unpaid_amount
-                      - fiscal_year
-                      - fiscal_period
-                      - approval_person
-                      - approval_person_id
-                      - cancelled
-                      - posted
-                      - do_not_pay
-                      - last_modified_date
-                      - tax_type
-                      - inclusive_exclusive
-                      - total_tax
-                      - input_date
-                      - external_po_number
-                      - external_po_url
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - ap_gl_cost_center
-                            - fiscal_year
-                            - fiscal_period
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_invoices:list
   /finance/post_ap_invoices/{id}:
     patch:
       tags:
@@ -53093,6 +52691,390 @@ paths:
       security:
       - access_token:
         - health.patients.medications:list
+  /finance/ap_invoices:
+    post:
+      tags:
+      - 'Finance: AP Invoices'
+      summary: 'Create Finance: AP Invoices'
+      description: The duplicate (non-shown) ID fields without `_id` are only for backwards compatibility, and should eventually be removed.
+      operationId: create_finance_ap_invoices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    invoice_id:
+                      type: integer
+                      description: AP Header ID
+                      readOnly: true
+                    invoice_number:
+                      type: string
+                      description: Invoice Number
+                      maxLength: 30
+                    invoice_date:
+                      type: string
+                      format: date
+                      description: Invoice Date
+                    due_date:
+                      type: string
+                      format: date
+                      description: Due Date
+                    description:
+                      type: string
+                      description: Description
+                      maxLength: 80
+                    ap_gl_account_id:
+                      type: integer
+                      description: AP GL Account ID
+                    approval_person_id:
+                      type: integer
+                      description: Approval Person ID
+                    vendor_id:
+                      type: integer
+                      description: Vendor ID
+                    do_not_pay:
+                      type: boolean
+                      description: Do Not Pay?
+                  required:
+                  - invoice_number
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_invoices:create
+    get:
+      tags:
+      - 'Finance: AP Invoices'
+      summary: 'List Finance: AP Invoices'
+      operationId: list_finance_ap_invoices
+      parameters:
+      - name: vendor_id
+        in: query
+        description: Vendor ID
+        schema:
+          type: integer
+      - name: unpaid_only
+        in: query
+        description: Unpaid? - Read Only
+        schema:
+          type: boolean
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoice_id:
+                          type: integer
+                          description: AP Header ID
+                          readOnly: true
+                        invoice_number:
+                          type: string
+                          description: Invoice Number
+                          maxLength: 30
+                        vendor:
+                          type: string
+                          description: Vendor
+                        vendor_id:
+                          type: integer
+                          description: Vendor ID
+                        invoice_date:
+                          type: string
+                          format: date
+                          description: Invoice Date
+                        due_date:
+                          type: string
+                          format: date
+                          description: Due Date
+                        posting_date:
+                          type: string
+                          format: date
+                          description: Posting Date - Read Only
+                          readOnly: true
+                        description:
+                          type: string
+                          description: Description
+                          maxLength: 80
+                        ap_gl_account:
+                          type: string
+                          description: AP GL Account
+                          readOnly: true
+                        ap_gl_account_id:
+                          type: integer
+                          description: AP GL Account ID
+                        ap_gl_cost_center:
+                          type: integer
+                          description: AP GL Cost Center - Read Only
+                          readOnly: true
+                        gross_amount:
+                          type: number
+                          description: Gross Amount - Read Only
+                          readOnly: true
+                        as_posted_amount:
+                          type: number
+                          description: As Posted Amount - Read Only
+                          readOnly: true
+                        net_amount_paid:
+                          type: number
+                          description: Net Amount Paid - Read Only
+                          readOnly: true
+                        unpaid_amount:
+                          type: number
+                          description: Unpaid Amount
+                          readOnly: true
+                        fiscal_year:
+                          type: integer
+                          description: Fiscal Year - Read Only
+                          readOnly: true
+                        fiscal_period:
+                          type: integer
+                          description: Fiscal Period - Read Only
+                          readOnly: true
+                        approval_person:
+                          type: string
+                          description: 'Approval Person
+
+
+                            Person who must approve this expense prior to its posting and payment'
+                          readOnly: true
+                        approval_person_id:
+                          type: integer
+                          description: Approval Person ID
+                        cancelled:
+                          type: boolean
+                          description: 'Cancel?
+
+
+                            This option cancels the entire invoice.'
+                        posted:
+                          type: boolean
+                          description: Posted?
+                        do_not_pay:
+                          type: boolean
+                          description: Do Not Pay?
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                        tax_type:
+                          type: string
+                          description: Tax Type ID for AP Invoices
+                          readOnly: true
+                        inclusive_exclusive:
+                          type: string
+                          description: Inclusive/Exclusive for AP Invoices
+                          readOnly: true
+                        total_tax:
+                          type: number
+                          description: Total Tax
+                        input_date:
+                          type: string
+                          format: date-time
+                          description: Input Date
+                      required:
+                      - invoice_id
+                      - invoice_number
+                      - vendor
+                      - vendor_id
+                      - invoice_date
+                      - due_date
+                      - posting_date
+                      - description
+                      - ap_gl_account
+                      - ap_gl_account_id
+                      - ap_gl_cost_center
+                      - gross_amount
+                      - as_posted_amount
+                      - net_amount_paid
+                      - unpaid_amount
+                      - fiscal_year
+                      - fiscal_period
+                      - approval_person
+                      - approval_person_id
+                      - cancelled
+                      - posted
+                      - do_not_pay
+                      - last_modified_date
+                      - tax_type
+                      - inclusive_exclusive
+                      - total_tax
+                      - input_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - ap_gl_cost_center
+                            - fiscal_year
+                            - fiscal_period
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_invoices:list
   /health/patients:
     get:
       tags:
@@ -68686,458 +68668,6 @@ paths:
       security:
       - access_token:
         - events.event_attendance:list
-  /finance/ap_invoices/{id}:
-    get:
-      tags:
-      - 'Finance: AP Invoices'
-      summary: 'Read Finance: AP Invoices'
-      operationId: read_finance_ap_invoices
-      parameters:
-      - name: id
-        in: path
-        description: AP Header ID
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      invoice_id:
-                        type: integer
-                        description: AP Header ID
-                        readOnly: true
-                      invoice_number:
-                        type: string
-                        description: Invoice Number
-                        maxLength: 30
-                      vendor:
-                        type: string
-                        description: Vendor
-                      vendor_id:
-                        type: integer
-                        description: Vendor ID
-                      invoice_date:
-                        type: string
-                        format: date
-                        description: Invoice Date
-                      due_date:
-                        type: string
-                        format: date
-                        description: Due Date
-                      posting_date:
-                        type: string
-                        format: date
-                        description: Posting Date - Read Only
-                        readOnly: true
-                      description:
-                        type: string
-                        description: Description
-                        maxLength: 80
-                      ap_gl_account:
-                        type: string
-                        description: AP GL Account
-                        readOnly: true
-                      ap_gl_account_id:
-                        type: integer
-                        description: AP GL Account ID
-                      ap_gl_cost_center:
-                        type: integer
-                        description: AP GL Cost Center - Read Only
-                        readOnly: true
-                      gross_amount:
-                        type: number
-                        description: Gross Amount - Read Only
-                        readOnly: true
-                      as_posted_amount:
-                        type: number
-                        description: As Posted Amount - Read Only
-                        readOnly: true
-                      net_amount_paid:
-                        type: number
-                        description: Net Amount Paid - Read Only
-                        readOnly: true
-                      unpaid_amount:
-                        type: number
-                        description: Unpaid Amount
-                        readOnly: true
-                      fiscal_year:
-                        type: integer
-                        description: Fiscal Year - Read Only
-                        readOnly: true
-                      fiscal_period:
-                        type: integer
-                        description: Fiscal Period - Read Only
-                        readOnly: true
-                      approval_person:
-                        type: string
-                        description: 'Approval Person
-
-
-                          Person who must approve this expense prior to its posting and payment'
-                        readOnly: true
-                      approval_person_id:
-                        type: integer
-                        description: Approval Person ID
-                      cancelled:
-                        type: boolean
-                        description: 'Cancel?
-
-
-                          This option cancels the entire invoice.'
-                      posted:
-                        type: boolean
-                        description: Posted?
-                      do_not_pay:
-                        type: boolean
-                        description: Do Not Pay?
-                      last_modified_date:
-                        type: string
-                        format: date-time
-                        description: Last Modified Date
-                        readOnly: true
-                      tax_type:
-                        type: string
-                        description: Tax Type ID for AP Invoices
-                        readOnly: true
-                      inclusive_exclusive:
-                        type: string
-                        description: Inclusive/Exclusive for AP Invoices
-                        readOnly: true
-                      total_tax:
-                        type: number
-                        description: Total Tax
-                      input_date:
-                        type: string
-                        format: date-time
-                        description: Input Date
-                      external_po_number:
-                        type: string
-                        description: External PO Number
-                        maxLength: 60
-                      external_po_url:
-                        type: string
-                        description: External PO Url
-                        maxLength: 500
-                    required:
-                    - invoice_id
-                    - invoice_number
-                    - vendor
-                    - vendor_id
-                    - invoice_date
-                    - due_date
-                    - posting_date
-                    - description
-                    - ap_gl_account
-                    - ap_gl_account_id
-                    - ap_gl_cost_center
-                    - gross_amount
-                    - as_posted_amount
-                    - net_amount_paid
-                    - unpaid_amount
-                    - fiscal_year
-                    - fiscal_period
-                    - approval_person
-                    - approval_person_id
-                    - cancelled
-                    - posted
-                    - do_not_pay
-                    - last_modified_date
-                    - tax_type
-                    - inclusive_exclusive
-                    - total_tax
-                    - input_date
-                    - external_po_number
-                    - external_po_url
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - ap_gl_cost_center
-                            - fiscal_year
-                            - fiscal_period
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_invoices:read
-    patch:
-      tags:
-      - 'Finance: AP Invoices'
-      summary: 'Update Finance: AP Invoices'
-      operationId: update_finance_ap_invoices
-      parameters:
-      - name: id
-        in: path
-        description: AP Header ID
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    invoice_id:
-                      type: integer
-                      description: AP Header ID
-                      readOnly: true
-                    invoice_number:
-                      type: string
-                      description: Invoice Number
-                      maxLength: 30
-                    vendor:
-                      type: string
-                      description: Vendor
-                    vendor_id:
-                      type: integer
-                      description: Vendor ID
-                    invoice_date:
-                      type: string
-                      format: date
-                      description: Invoice Date
-                    due_date:
-                      type: string
-                      format: date
-                      description: Due Date
-                    posting_date:
-                      type: string
-                      format: date
-                      description: Posting Date - Read Only
-                      readOnly: true
-                    description:
-                      type: string
-                      description: Description
-                      maxLength: 80
-                    ap_gl_account:
-                      type: string
-                      description: AP GL Account
-                      readOnly: true
-                    ap_gl_account_id:
-                      type: integer
-                      description: AP GL Account ID
-                    ap_gl_cost_center:
-                      type: integer
-                      description: AP GL Cost Center - Read Only
-                      readOnly: true
-                    gross_amount:
-                      type: number
-                      description: Gross Amount - Read Only
-                      readOnly: true
-                    as_posted_amount:
-                      type: number
-                      description: As Posted Amount - Read Only
-                      readOnly: true
-                    net_amount_paid:
-                      type: number
-                      description: Net Amount Paid - Read Only
-                      readOnly: true
-                    unpaid_amount:
-                      type: number
-                      description: Unpaid Amount
-                      readOnly: true
-                    fiscal_year:
-                      type: integer
-                      description: Fiscal Year - Read Only
-                      readOnly: true
-                    fiscal_period:
-                      type: integer
-                      description: Fiscal Period - Read Only
-                      readOnly: true
-                    approval_person:
-                      type: string
-                      description: 'Approval Person
-
-
-                        Person who must approve this expense prior to its posting and payment'
-                      readOnly: true
-                    approval_person_id:
-                      type: integer
-                      description: Approval Person ID
-                    cancelled:
-                      type: boolean
-                      description: 'Cancel?
-
-
-                        This option cancels the entire invoice.'
-                    posted:
-                      type: boolean
-                      description: Posted?
-                    do_not_pay:
-                      type: boolean
-                      description: Do Not Pay?
-                    last_modified_date:
-                      type: string
-                      format: date-time
-                      description: Last Modified Date
-                      readOnly: true
-                    tax_type:
-                      type: string
-                      description: Tax Type ID for AP Invoices
-                      readOnly: true
-                    inclusive_exclusive:
-                      type: string
-                      description: Inclusive/Exclusive for AP Invoices
-                      readOnly: true
-                    total_tax:
-                      type: number
-                      description: Total Tax
-                    input_date:
-                      type: string
-                      format: date-time
-                      description: Input Date
-                    external_po_number:
-                      type: string
-                      description: External PO Number
-                      maxLength: 60
-                    external_po_url:
-                      type: string
-                      description: External PO Url
-                      maxLength: 500
-              required:
-              - data
-      responses:
-        '204':
-          description: No Content
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - finance.ap_invoices:update
   /households:
     post:
       tags:
@@ -77279,6 +76809,440 @@ paths:
       security:
       - access_token:
         - finance.ap_invoice_items:update
+  /finance/ap_invoices/{id}:
+    get:
+      tags:
+      - 'Finance: AP Invoices'
+      summary: 'Read Finance: AP Invoices'
+      operationId: read_finance_ap_invoices
+      parameters:
+      - name: id
+        in: path
+        description: AP Header ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      invoice_id:
+                        type: integer
+                        description: AP Header ID
+                        readOnly: true
+                      invoice_number:
+                        type: string
+                        description: Invoice Number
+                        maxLength: 30
+                      vendor:
+                        type: string
+                        description: Vendor
+                      vendor_id:
+                        type: integer
+                        description: Vendor ID
+                      invoice_date:
+                        type: string
+                        format: date
+                        description: Invoice Date
+                      due_date:
+                        type: string
+                        format: date
+                        description: Due Date
+                      posting_date:
+                        type: string
+                        format: date
+                        description: Posting Date - Read Only
+                        readOnly: true
+                      description:
+                        type: string
+                        description: Description
+                        maxLength: 80
+                      ap_gl_account:
+                        type: string
+                        description: AP GL Account
+                        readOnly: true
+                      ap_gl_account_id:
+                        type: integer
+                        description: AP GL Account ID
+                      ap_gl_cost_center:
+                        type: integer
+                        description: AP GL Cost Center - Read Only
+                        readOnly: true
+                      gross_amount:
+                        type: number
+                        description: Gross Amount - Read Only
+                        readOnly: true
+                      as_posted_amount:
+                        type: number
+                        description: As Posted Amount - Read Only
+                        readOnly: true
+                      net_amount_paid:
+                        type: number
+                        description: Net Amount Paid - Read Only
+                        readOnly: true
+                      unpaid_amount:
+                        type: number
+                        description: Unpaid Amount
+                        readOnly: true
+                      fiscal_year:
+                        type: integer
+                        description: Fiscal Year - Read Only
+                        readOnly: true
+                      fiscal_period:
+                        type: integer
+                        description: Fiscal Period - Read Only
+                        readOnly: true
+                      approval_person:
+                        type: string
+                        description: 'Approval Person
+
+
+                          Person who must approve this expense prior to its posting and payment'
+                        readOnly: true
+                      approval_person_id:
+                        type: integer
+                        description: Approval Person ID
+                      cancelled:
+                        type: boolean
+                        description: 'Cancel?
+
+
+                          This option cancels the entire invoice.'
+                      posted:
+                        type: boolean
+                        description: Posted?
+                      do_not_pay:
+                        type: boolean
+                        description: Do Not Pay?
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                      tax_type:
+                        type: string
+                        description: Tax Type ID for AP Invoices
+                        readOnly: true
+                      inclusive_exclusive:
+                        type: string
+                        description: Inclusive/Exclusive for AP Invoices
+                        readOnly: true
+                      total_tax:
+                        type: number
+                        description: Total Tax
+                      input_date:
+                        type: string
+                        format: date-time
+                        description: Input Date
+                    required:
+                    - invoice_id
+                    - invoice_number
+                    - vendor
+                    - vendor_id
+                    - invoice_date
+                    - due_date
+                    - posting_date
+                    - description
+                    - ap_gl_account
+                    - ap_gl_account_id
+                    - ap_gl_cost_center
+                    - gross_amount
+                    - as_posted_amount
+                    - net_amount_paid
+                    - unpaid_amount
+                    - fiscal_year
+                    - fiscal_period
+                    - approval_person
+                    - approval_person_id
+                    - cancelled
+                    - posted
+                    - do_not_pay
+                    - last_modified_date
+                    - tax_type
+                    - inclusive_exclusive
+                    - total_tax
+                    - input_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - ap_gl_cost_center
+                            - fiscal_year
+                            - fiscal_period
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_invoices:read
+    patch:
+      tags:
+      - 'Finance: AP Invoices'
+      summary: 'Update Finance: AP Invoices'
+      operationId: update_finance_ap_invoices
+      parameters:
+      - name: id
+        in: path
+        description: AP Header ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    invoice_id:
+                      type: integer
+                      description: AP Header ID
+                      readOnly: true
+                    invoice_number:
+                      type: string
+                      description: Invoice Number
+                      maxLength: 30
+                    vendor:
+                      type: string
+                      description: Vendor
+                    vendor_id:
+                      type: integer
+                      description: Vendor ID
+                    invoice_date:
+                      type: string
+                      format: date
+                      description: Invoice Date
+                    due_date:
+                      type: string
+                      format: date
+                      description: Due Date
+                    posting_date:
+                      type: string
+                      format: date
+                      description: Posting Date - Read Only
+                      readOnly: true
+                    description:
+                      type: string
+                      description: Description
+                      maxLength: 80
+                    ap_gl_account:
+                      type: string
+                      description: AP GL Account
+                      readOnly: true
+                    ap_gl_account_id:
+                      type: integer
+                      description: AP GL Account ID
+                    ap_gl_cost_center:
+                      type: integer
+                      description: AP GL Cost Center - Read Only
+                      readOnly: true
+                    gross_amount:
+                      type: number
+                      description: Gross Amount - Read Only
+                      readOnly: true
+                    as_posted_amount:
+                      type: number
+                      description: As Posted Amount - Read Only
+                      readOnly: true
+                    net_amount_paid:
+                      type: number
+                      description: Net Amount Paid - Read Only
+                      readOnly: true
+                    unpaid_amount:
+                      type: number
+                      description: Unpaid Amount
+                      readOnly: true
+                    fiscal_year:
+                      type: integer
+                      description: Fiscal Year - Read Only
+                      readOnly: true
+                    fiscal_period:
+                      type: integer
+                      description: Fiscal Period - Read Only
+                      readOnly: true
+                    approval_person:
+                      type: string
+                      description: 'Approval Person
+
+
+                        Person who must approve this expense prior to its posting and payment'
+                      readOnly: true
+                    approval_person_id:
+                      type: integer
+                      description: Approval Person ID
+                    cancelled:
+                      type: boolean
+                      description: 'Cancel?
+
+
+                        This option cancels the entire invoice.'
+                    posted:
+                      type: boolean
+                      description: Posted?
+                    do_not_pay:
+                      type: boolean
+                      description: Do Not Pay?
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+                    tax_type:
+                      type: string
+                      description: Tax Type ID for AP Invoices
+                      readOnly: true
+                    inclusive_exclusive:
+                      type: string
+                      description: Inclusive/Exclusive for AP Invoices
+                      readOnly: true
+                    total_tax:
+                      type: number
+                      description: Total Tax
+                    input_date:
+                      type: string
+                      format: date-time
+                      description: Input Date
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - finance.ap_invoices:update
   /academics/classes/{id}:
     get:
       tags:
