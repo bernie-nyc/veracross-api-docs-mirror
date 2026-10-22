@@ -52739,6 +52739,14 @@ paths:
                     do_not_pay:
                       type: boolean
                       description: Do Not Pay?
+                    external_invoice_number:
+                      type: string
+                      description: External Invoice Number
+                      maxLength: 60
+                    external_invoice_url:
+                      type: string
+                      description: External Invoice Url
+                      maxLength: 500
                   required:
                   - invoice_number
               required:
@@ -52956,6 +52964,14 @@ paths:
                           type: string
                           format: date-time
                           description: Input Date
+                        external_invoice_number:
+                          type: string
+                          description: External Invoice Number
+                          maxLength: 60
+                        external_invoice_url:
+                          type: string
+                          description: External Invoice Url
+                          maxLength: 500
                       required:
                       - invoice_id
                       - invoice_number
@@ -52984,6 +53000,8 @@ paths:
                       - inclusive_exclusive
                       - total_tax
                       - input_date
+                      - external_invoice_number
+                      - external_invoice_url
                   value_lists:
                     type: array
                     description: Present only with header `X-API-Value-Lists = include`
@@ -76947,6 +76965,14 @@ paths:
                         type: string
                         format: date-time
                         description: Input Date
+                      external_invoice_number:
+                        type: string
+                        description: External Invoice Number
+                        maxLength: 60
+                      external_invoice_url:
+                        type: string
+                        description: External Invoice Url
+                        maxLength: 500
                     required:
                     - invoice_id
                     - invoice_number
@@ -76975,6 +77001,8 @@ paths:
                     - inclusive_exclusive
                     - total_tax
                     - input_date
+                    - external_invoice_number
+                    - external_invoice_url
                   value_lists:
                     type: array
                     description: Present only with header `X-API-Value-Lists = include`
@@ -77195,6 +77223,14 @@ paths:
                       type: string
                       format: date-time
                       description: Input Date
+                    external_invoice_number:
+                      type: string
+                      description: External Invoice Number
+                      maxLength: 60
+                    external_invoice_url:
+                      type: string
+                      description: External Invoice Url
+                      maxLength: 500
               required:
               - data
       responses:
