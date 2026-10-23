@@ -1,0 +1,41 @@
+# Auto-publish Veracross API docs to GitHub Wiki
+name: Wiki Publish
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'reference/**'
+      - 'scripts/**'
+      - '.github/workflows/sync.yml'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install pyyaml
+      - name: Dry run page count
+        id: count
+        run: |
+          if [ -f wiki-source.tar.gz ]; then
+            COUNT=$(tar -tf wiki-source.tar.gz | wc -l)
+            echo "Page count: $COUNT"
+            echo "::set-output name=pages::$COUNT"
+          else
+            echo "No wiki-source.tar.gz found"
+          fi
+      - name: Publish Wiki
+        run: |
+          chmod +x wiki_bootstrap.sh
+          ./wiki_bootstrap.sh
+        env:
+          GIT_AUTHOR_NAME: bernie-nyc
+          GIT_AUTHOR_EMAIL: bernie-nyc@users.noreply.github.com
