@@ -27,7 +27,7 @@ jobs:
         run: |
           if [ -f wiki-source.tar.gz ]; then
             # Count only file entries, exclude directories
-            COUNT=$(tar -tf wiki-source.tar.gz | grep -v '/$' | wc -l)
+            COUNT=$(( $(tar -tf wiki-source.tar.gz | grep -v '/$' | wc -l) + 1 ))
             echo "Page count: $COUNT"
             echo "::set-output name=pages::$COUNT"
             # Update PR description with page count if running in PR context
