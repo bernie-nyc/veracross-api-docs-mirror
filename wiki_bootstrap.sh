@@ -18,6 +18,13 @@ REPO="bernie-nyc/veracross-api-docs-mirror"
 TARBALL="$DIR/wiki-source.tar.gz"
 
 [ -f "$TARBALL" ] || { echo "ERROR: missing $TARBALL"; exit 1; }
+# Verify tarball is up-to-date
+EXPECTED_COMMIT=$(git rev-parse HEAD)
+TARBALL_COMMIT=$(tar -xOf "$TARBALL" .tarball_commit 2>/dev/null || echo "")
+if [ "$TARBALL_COMMIT" != "$EXPECTED_COMMIT" ]; then
+  echo "ERROR: wiki-source.tar.gz is stale (commit $TARBALL_COMMIT vs HEAD $EXPECTED_COMMIT)."
+  exit 1
+fi
 
 # 1) verify the backing wiki repo is now pushable
 if ! git ls-remote "https://github.com/$REPO.wiki.git" >/dev/null 2>&1; then
