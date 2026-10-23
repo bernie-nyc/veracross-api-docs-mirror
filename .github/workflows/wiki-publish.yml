@@ -26,9 +26,14 @@ jobs:
         id: count
         run: |
           if [ -f wiki-source.tar.gz ]; then
-            COUNT=$(tar -tf wiki-source.tar.gz | wc -l)
+            # Count only file entries, exclude directories
+            COUNT=$(tar -tf wiki-source.tar.gz | grep -v '/$' | wc -l)
             echo "Page count: $COUNT"
             echo "::set-output name=pages::$COUNT"
+            # Update PR description with page count if running in PR context
+            if [ -n "${{ github.event.pull_request.number }}" ]; then
+              gh pr edit ${{ github.event.pull_request.number }} --body "Dry run page count: $COUNT"
+            fi
           else
             echo "No wiki-source.tar.gz found"
           fi
