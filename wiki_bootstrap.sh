@@ -43,7 +43,12 @@ tar -xf "$TARBALL" -C .
 
 # 4) commit + force-push to the wiki's default branch (master)
 git add -A
-git -c user.email="bernie-nyc@users.noreply.github.com" -c user.name="bernie-nyc" \
-  commit -qm "Mirror Veracross API docs left menu as wiki pages (484, flat links)"
-git push -f origin master
+if git diff --quiet && git diff --cached --quiet; then
+  echo "✓ wiki source unchanged; no commit needed"
+else
+  git -c user.email="bernie-nyc@users.noreply.github.com" -c user.name="bernie-nyc" \
+    commit -qm "Mirror Veracross API docs left menu as wiki pages (auto-updated)"
+  git push -f origin master
+  echo "✓ pushed updated wiki to master"
+fi
 echo "✓ pushed to master. Wiki live at https://github.com/$REPO/wiki"
