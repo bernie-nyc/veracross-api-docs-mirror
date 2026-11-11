@@ -122,11 +122,6 @@
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ed84457d05c15"
     },
     {
-      "path": "docs/changelogs/Data-API.recent.md",
-      "title": "Data API - Recent Changelog",
-      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/893243dd5690d"
-    },
-    {
       "path": "docs/guides/creating-an-sso-integration.md",
       "title": "Creating an SSO Integration",
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/5fb9f96bc480a"
@@ -135,6 +130,11 @@
       "path": "docs/concepts/access-tokens.md",
       "title": "Access Tokens",
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/097f6c769cafb"
+    },
+    {
+      "path": "docs/changelogs/Data-API.recent.md",
+      "title": "Data API - Recent Changelog",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/893243dd5690d"
     }
   ],
   "specs": [
@@ -174,5 +174,5 @@
       "paths": 6
     }
   ],
-  "generated_at": "2026-10-30T06:34:53Z"
+  "generated_at": "2026-11-11T06:31:07Z"
 }

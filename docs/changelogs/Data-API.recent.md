@@ -1,5 +1,53 @@
 # Data API - Recent Changelog
 
+## November 2026
+
+### 2026-11-10
+
+#### Other Changes
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | A breaking change was detected but the version is still `3.0.0` |
+
+#### GET /academics/student_assignments
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added `publish_status` enum value to the `value_lists.items.fields.items` response property for the response status `200` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added optional `query` request parameter `publish_status` |
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.publish_status` to the response with the `200` status |
+
+#### GET /athletics/teams/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Response property `data.internal_sport_id` became read-only for the status `200` |
+
+#### GET /student_logistics/reasons
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.lock_attendance_on_approval` to the response with the `200` status |
+
+#### PATCH /athletics/teams/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Request property `data.internal_sport_id` became read-only |
+
+#### POST /athletics/teams
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Request property `data.internal_sport_id` became read-only |
+
+#### POST /exams/qualifications
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/info.svg' alt='info' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Request property `data.awarding_body_id` became optional |
+
 ## October 2026
 
 ### 2026-10-29
@@ -729,40 +777,6 @@
 | <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added optional `query` request parameter `on_or_before_last_modified_date` |
 | <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added optional `query` request parameter `unpaid_only` |
 | <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added optional `query` request parameter `vendor_id` |
-
-### 2026-08-06
-
-#### GET /finance/ap_invoices
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed the `query` request parameter `on_or_after_last_modified_date` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed the `query` request parameter `on_or_before_last_modified_date` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed the `query` request parameter `unpaid_only` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/minus.svg' alt='minus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Removed the `query` request parameter `vendor_id` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.external_po_number` to the response with the `200` status |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.external_po_url` to the response with the `200` status |
-
-#### GET /finance/ap_invoices/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.external_po_number` to the response with the `200` status |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.external_po_url` to the response with the `200` status |
-
-#### PATCH /finance/ap_invoices/{id}
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.external_po_number` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.external_po_url` |
-
-#### POST /finance/ap_invoices
-
-|    | Description |
-|----|-------------|
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.external_po_number` |
-| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.external_po_url` |
 
 ### Older updates
 
