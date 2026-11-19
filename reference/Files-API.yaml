@@ -1177,6 +1177,16 @@ components:
             files:person_photo:read: Read Person Photo
           tokenUrl: https://accounts.veracross.com/{school_route}/oauth/token
   schemas:
+    post:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: {}
+          required:
+          - id
+      required:
+      - data
     error:
       type: object
       description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
@@ -1190,13 +1200,3 @@ components:
       required:
       - error
       - error_id
-    post:
-      type: object
-      properties:
-        data:
-          type: object
-          properties: {}
-          required:
-          - id
-      required:
-      - data

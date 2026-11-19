@@ -19,127 +19,6 @@ servers:
 tags:
 - name: OAuth
 paths:
-  /oauth/introspect:
-    post:
-      tags:
-      - OAuth
-      summary: Token Introspection
-      description: 'The Token Introspection extension defines a mechanism for resource servers to obtain information about access tokens. With this spec, resource servers can check the validity of access tokens, and find out other information such as which user and which scopes are associated with the token.
-
-
-        #### Endpoint applies to:
-
-
-        | Grant Type | Applicable |
-
-        |------------|------------|
-
-        | Client Credentials | ✅ |
-
-        | Authorization Code | ✅ |
-
-        | Refresh Token      | ✅ |
-
-
-        #### Related links
-
-        - https://tools.ietf.org/html/rfc7662
-
-        - https://www.oauth.com/oauth2-servers/token-introspection-endpoint/
-
-        - https://oauth.net/2/token-introspection/'
-      operationId: post-oauth-introspect
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                client_id:
-                  type: string
-                client_secret:
-                  type: string
-                token:
-                  type: string
-              required:
-              - client_id
-              - client_secret
-              - token
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  active:
-                    type: boolean
-                  scope:
-                    type: string
-                  client_id:
-                    type:
-                    - string
-                    - 'null'
-                    description: null when used on token issued with authorization_code as grant_type
-                  token_type:
-                    type: string
-                  exp:
-                    type: integer
-                  iat:
-                    type: integer
-                required:
-                - active
-              examples:
-              - key: With valid access token
-                value:
-                  active: true
-                  scope: example.object:list another.thing:create
-                  client_id: null
-                  token_type: Bearer
-                  exp: 1600821466
-                  iat: 1600817866
-              - key: With invalid token
-                value:
-                  active: false
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: An error code
-                  error_description:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_description
-              examples:
-              - key: Error Example
-                value:
-                  error: invalid_client
-                  error_description: The requested client id is unknown or unauthorized.
-                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
-                summary: Invalid Client
-        '415':
-          description: 'Unsupported media type.
-
-            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-              examples:
-              - key: UnsupportedMediaType
-                value: {}
   /oauth/discovery/keys:
     get:
       tags:
@@ -832,6 +711,127 @@ paths:
           description: 'Not Found.
 
             There was no user associated with the provided access token. This can happen if the request uses an access token created with the Client Credentials grant type; since those exist apart from an individual user identity, there''s no user info that can be provided. User info requests should only be made with Authorization Code access tokens.'
+        '415':
+          description: 'Unsupported media type.
+
+            This happens when the requests lacks the header `application/x-www-form-urlencoded`.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+              - key: UnsupportedMediaType
+                value: {}
+  /oauth/introspect:
+    post:
+      tags:
+      - OAuth
+      summary: Token Introspection
+      description: 'The Token Introspection extension defines a mechanism for resource servers to obtain information about access tokens. With this spec, resource servers can check the validity of access tokens, and find out other information such as which user and which scopes are associated with the token.
+
+
+        #### Endpoint applies to:
+
+
+        | Grant Type | Applicable |
+
+        |------------|------------|
+
+        | Client Credentials | ✅ |
+
+        | Authorization Code | ✅ |
+
+        | Refresh Token      | ✅ |
+
+
+        #### Related links
+
+        - https://tools.ietf.org/html/rfc7662
+
+        - https://www.oauth.com/oauth2-servers/token-introspection-endpoint/
+
+        - https://oauth.net/2/token-introspection/'
+      operationId: post-oauth-introspect
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                token:
+                  type: string
+              required:
+              - client_id
+              - client_secret
+              - token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                  scope:
+                    type: string
+                  client_id:
+                    type:
+                    - string
+                    - 'null'
+                    description: null when used on token issued with authorization_code as grant_type
+                  token_type:
+                    type: string
+                  exp:
+                    type: integer
+                  iat:
+                    type: integer
+                required:
+                - active
+              examples:
+              - key: With valid access token
+                value:
+                  active: true
+                  scope: example.object:list another.thing:create
+                  client_id: null
+                  token_type: Bearer
+                  exp: 1600821466
+                  iat: 1600817866
+              - key: With invalid token
+                value:
+                  active: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: An error code
+                  error_description:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_description
+              examples:
+              - key: Error Example
+                value:
+                  error: invalid_client
+                  error_description: The requested client id is unknown or unauthorized.
+                  error_id: 896204e2-89e9-46c9-2fd0-ef74df63d513
+                summary: Invalid Client
         '415':
           description: 'Unsupported media type.
 
