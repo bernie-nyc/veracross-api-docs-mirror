@@ -26145,6 +26145,12 @@ paths:
 
 
                             Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                        exclude_from_report_card:
+                          type: boolean
+                          description: 'Exclude From Report Card
+
+
+                            Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
                         notes:
                           type: string
                           description: Notes
@@ -26168,6 +26174,7 @@ paths:
                       - date_withdrawn
                       - level
                       - exclude_from_transcript
+                      - exclude_from_report_card
                       - notes
                       - last_modified_date
                   value_lists:
@@ -26328,6 +26335,12 @@ paths:
 
 
                         Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    exclude_from_report_card:
+                      type: boolean
+                      description: 'Exclude From Report Card
+
+
+                        Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
                     notes:
                       type: string
                       description: Notes
@@ -29493,446 +29506,6 @@ paths:
       security:
       - access_token:
         - academics.departments:read
-  /academics/enrollments/{id}:
-    get:
-      tags:
-      - 'Academics: Enrollments'
-      summary: 'Read Academics: Enrollments'
-      description: 'Default criteria:
-
-
-        - `school_year` is in (`{Current_School_Year}`)
-
-        - `course_type_exclude` is not in (0, 15, 20, 25, 30, 40)'
-      operationId: read_academics_enrollments
-      parameters:
-      - name: id
-        in: path
-        description: Enrollment ID
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      internal_class_id:
-                        type: integer
-                        description: Internal Class ID
-                        readOnly: true
-                      class_description:
-                        type: string
-                        description: Description
-                        maxLength: 80
-                      class_status:
-                        type: integer
-                        description: 'Status
-
-
-                          Status of the class (active, future, etc.)'
-                      primary_teacher:
-                        type: object
-                        properties:
-                          name_prefix:
-                            type: string
-                            description: Description
-                            readOnly: true
-                          first_name:
-                            type: string
-                            description: First Name
-                            maxLength: 50
-                          middle_name:
-                            type: string
-                            description: Middle Name
-                            maxLength: 50
-                          last_name:
-                            type: string
-                            description: Last Name
-                            maxLength: 50
-                          name_suffix:
-                            type: string
-                            description: Description
-                            readOnly: true
-                          preferred_name:
-                            type: string
-                            description: Preferred Name
-                            maxLength: 50
-                        required:
-                        - id
-                        - name_prefix
-                        - first_name
-                        - middle_name
-                        - last_name
-                        - name_suffix
-                        - preferred_name
-                      person_id:
-                        type: integer
-                        description: Person ID
-                        readOnly: true
-                      person_name:
-                        type: string
-                        description: 'Full Name
-
-
-                          The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
-                        readOnly: true
-                      grade_level_id:
-                        type: integer
-                        description: ID
-                        readOnly: true
-                      currently_enrolled:
-                        type: boolean
-                        description: 'Currently Enrolled
-
-
-                          A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
-
-
-
-
-                          For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
-                      late_date_enrolled:
-                        type: string
-                        format: date
-                        description: 'Late Date Enrolled
-
-
-                          The date the student enrolled in the class'
-                      date_withdrawn:
-                        type: string
-                        format: date
-                        description: 'Date Withdrawn
-
-
-                          The date the student withdrew from the class'
-                      level:
-                        type: integer
-                        description: 'Enrollment Level
-
-
-                          The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
-                      exclude_from_transcript:
-                        type: boolean
-                        description: 'Exclude From Transcript
-
-
-                          Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
-                      notes:
-                        type: string
-                        description: Notes
-                        maxLength: 1000
-                      last_modified_date:
-                        type: string
-                        format: date-time
-                        description: Last Modified Date
-                        readOnly: true
-                    required:
-                    - id
-                    - internal_class_id
-                    - class_description
-                    - class_status
-                    - primary_teacher
-                    - person_id
-                    - person_name
-                    - grade_level_id
-                    - currently_enrolled
-                    - late_date_enrolled
-                    - date_withdrawn
-                    - level
-                    - exclude_from_transcript
-                    - notes
-                    - last_modified_date
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - class_status
-                            - level
-                            - school_year
-                            - course_type
-                            - subject
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.enrollments:read
-    patch:
-      tags:
-      - 'Academics: Enrollments'
-      summary: 'Update Academics: Enrollments'
-      description: 'Default criteria:
-
-
-        - `school_year` is in (`{Current_School_Year}`)
-
-        - `course_type_exclude` is not in (0, 15, 20, 25, 30, 40)'
-      operationId: update_academics_enrollments
-      parameters:
-      - name: id
-        in: path
-        description: Enrollment ID
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    internal_class_id:
-                      type: integer
-                      description: Internal Class ID
-                      readOnly: true
-                    class_description:
-                      type: string
-                      description: Description
-                      maxLength: 80
-                    class_status:
-                      type: integer
-                      description: 'Status
-
-
-                        Status of the class (active, future, etc.)'
-                    primary_teacher:
-                      type: object
-                      properties:
-                        name_prefix:
-                          type: string
-                          description: Description
-                          readOnly: true
-                        first_name:
-                          type: string
-                          description: First Name
-                          maxLength: 50
-                        middle_name:
-                          type: string
-                          description: Middle Name
-                          maxLength: 50
-                        last_name:
-                          type: string
-                          description: Last Name
-                          maxLength: 50
-                        name_suffix:
-                          type: string
-                          description: Description
-                          readOnly: true
-                        preferred_name:
-                          type: string
-                          description: Preferred Name
-                          maxLength: 50
-                      required:
-                      - id
-                      - name_prefix
-                      - first_name
-                      - middle_name
-                      - last_name
-                      - name_suffix
-                      - preferred_name
-                    person_id:
-                      type: integer
-                      description: Person ID
-                      readOnly: true
-                    person_name:
-                      type: string
-                      description: 'Full Name
-
-
-                        The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
-                      readOnly: true
-                    grade_level_id:
-                      type: integer
-                      description: ID
-                      readOnly: true
-                    currently_enrolled:
-                      type: boolean
-                      description: 'Currently Enrolled
-
-
-                        A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
-
-
-
-
-                        For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
-                    late_date_enrolled:
-                      type: string
-                      format: date
-                      description: 'Late Date Enrolled
-
-
-                        The date the student enrolled in the class'
-                    date_withdrawn:
-                      type: string
-                      format: date
-                      description: 'Date Withdrawn
-
-
-                        The date the student withdrew from the class'
-                    level:
-                      type: integer
-                      description: 'Enrollment Level
-
-
-                        The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
-                    exclude_from_transcript:
-                      type: boolean
-                      description: 'Exclude From Transcript
-
-
-                        Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
-                    notes:
-                      type: string
-                      description: Notes
-                      maxLength: 1000
-                    last_modified_date:
-                      type: string
-                      format: date-time
-                      description: Last Modified Date
-                      readOnly: true
-              required:
-              - data
-      responses:
-        '204':
-          description: No Content
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - academics.enrollments:update
   /academics/config/grading_periods:
     get:
       tags:
@@ -82866,6 +82439,12 @@ paths:
 
 
                         Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    exclude_from_report_card:
+                      type: boolean
+                      description: 'Exclude From Report Card
+
+
+                        Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
                     notes:
                       type: string
                       description: Notes
@@ -83077,6 +82656,12 @@ paths:
 
 
                             Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                        exclude_from_report_card:
+                          type: boolean
+                          description: 'Exclude From Report Card
+
+
+                            Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
                         notes:
                           type: string
                           description: Notes
@@ -83102,6 +82687,7 @@ paths:
                       - captain
                       - lettered
                       - exclude_from_transcript
+                      - exclude_from_report_card
                       - notes
                   value_lists:
                     type: array
@@ -83197,409 +82783,6 @@ paths:
       security:
       - access_token:
         - athletics.rosters:list
-  /athletics/rosters/{id}:
-    get:
-      tags:
-      - 'Athletics: Rosters'
-      summary: 'Read Athletics: Rosters'
-      description: 'Default criteria:
-
-
-        - `course_type_include` is in (15)'
-      operationId: read_athletics_rosters
-      parameters:
-      - name: id
-        in: path
-        description: Enrollment ID
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      internal_class_id:
-                        type: integer
-                        description: Internal Class ID
-                      person_id:
-                        type: integer
-                        description: Person ID
-                      first_name:
-                        type: string
-                        description: First Name
-                        maxLength: 50
-                      preferred_name:
-                        type: string
-                        description: Preferred Name
-                        maxLength: 50
-                      last_name:
-                        type: string
-                        description: Last Name
-                        maxLength: 50
-                      suffix:
-                        type: integer
-                        description: Name Suffix
-                      grade_level_id:
-                        type: integer
-                        description: Grade Level
-                      currently_enrolled:
-                        type: boolean
-                        description: 'Currently Enrolled
-
-
-                          A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
-
-
-
-
-                          For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
-                      late_date_enrolled:
-                        type: string
-                        format: date
-                        description: 'Late Date Enrolled
-
-
-                          The date the student enrolled in the class'
-                      date_withdrawn:
-                        type: string
-                        format: date
-                        description: 'Date Withdrawn
-
-
-                          The date the student withdrew from the class'
-                      level:
-                        type: integer
-                        description: 'Enrollment Level
-
-
-                          The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
-                      jersey_size:
-                        type: integer
-                        description: Jersey Size
-                      jersey_number:
-                        type: string
-                        description: 'Jersey #'
-                        maxLength: 3
-                      position:
-                        type: string
-                        description: Position
-                        maxLength: 20
-                      height:
-                        type: string
-                        description: Height
-                        maxLength: 8
-                      weight:
-                        type: string
-                        description: Weight
-                        maxLength: 10
-                      captain:
-                        type: boolean
-                        description: Captain
-                      lettered:
-                        type: boolean
-                        description: Lettered
-                      exclude_from_transcript:
-                        type: boolean
-                        description: 'Exclude From Transcript
-
-
-                          Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
-                      notes:
-                        type: string
-                        description: Notes
-                        maxLength: 1000
-                    required:
-                    - id
-                    - internal_class_id
-                    - person_id
-                    - first_name
-                    - preferred_name
-                    - last_name
-                    - suffix
-                    - grade_level_id
-                    - currently_enrolled
-                    - late_date_enrolled
-                    - date_withdrawn
-                    - level
-                    - jersey_size
-                    - jersey_number
-                    - position
-                    - height
-                    - weight
-                    - captain
-                    - lettered
-                    - exclude_from_transcript
-                    - notes
-                  value_lists:
-                    type: array
-                    description: Present only with header `X-API-Value-Lists = include`
-                    readOnly: true
-                    items:
-                      type: object
-                      properties:
-                        fields:
-                          type: array
-                          description: An array of field names from `data` that this value list goes with
-                          items:
-                            type: string
-                            enum:
-                            - suffix
-                            - grade_level_id
-                            - level
-                            - jersey_size
-                            - school_year
-                            - sport
-                        items:
-                          type: array
-                          description: An array of value list items whose `id` field matches the value in the response data
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              category:
-                                type: integer
-                              sort_key:
-                                type: integer
-                              obsolete:
-                                type: boolean
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                        categories:
-                          type: array
-                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
-                          items:
-                            type: object
-                            properties:
-                              description:
-                                type: string
-                              sort_key:
-                                type: integer
-                            required:
-                            - id
-                            - description
-                            - sort_key
-                      required:
-                      - fields
-                      - items
-                      - categories
-                required:
-                - data
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - athletics.rosters:read
-    patch:
-      tags:
-      - 'Athletics: Rosters'
-      summary: 'Update Athletics: Rosters'
-      description: 'Default criteria:
-
-
-        - `course_type_include` is in (15)'
-      operationId: update_athletics_rosters
-      parameters:
-      - name: id
-        in: path
-        description: Enrollment ID
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    internal_class_id:
-                      type: integer
-                      description: Internal Class ID
-                    person_id:
-                      type: integer
-                      description: Person ID
-                    first_name:
-                      type: string
-                      description: First Name
-                      maxLength: 50
-                    preferred_name:
-                      type: string
-                      description: Preferred Name
-                      maxLength: 50
-                    last_name:
-                      type: string
-                      description: Last Name
-                      maxLength: 50
-                    suffix:
-                      type: integer
-                      description: Name Suffix
-                    grade_level_id:
-                      type: integer
-                      description: Grade Level
-                    currently_enrolled:
-                      type: boolean
-                      description: 'Currently Enrolled
-
-
-                        A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
-
-
-
-
-                        For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
-                    late_date_enrolled:
-                      type: string
-                      format: date
-                      description: 'Late Date Enrolled
-
-
-                        The date the student enrolled in the class'
-                    date_withdrawn:
-                      type: string
-                      format: date
-                      description: 'Date Withdrawn
-
-
-                        The date the student withdrew from the class'
-                    level:
-                      type: integer
-                      description: 'Enrollment Level
-
-
-                        The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
-                    jersey_size:
-                      type: integer
-                      description: Jersey Size
-                    jersey_number:
-                      type: string
-                      description: 'Jersey #'
-                      maxLength: 3
-                    position:
-                      type: string
-                      description: Position
-                      maxLength: 20
-                    height:
-                      type: string
-                      description: Height
-                      maxLength: 8
-                    weight:
-                      type: string
-                      description: Weight
-                      maxLength: 10
-                    captain:
-                      type: boolean
-                      description: Captain
-                    lettered:
-                      type: boolean
-                      description: Lettered
-                    exclude_from_transcript:
-                      type: boolean
-                      description: 'Exclude From Transcript
-
-
-                        Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
-                    notes:
-                      type: string
-                      description: Notes
-                      maxLength: 1000
-              required:
-              - data
-      responses:
-        '204':
-          description: No Content
-          headers:
-            X-API-Revision:
-              description: API Revision
-              schema:
-                type: string
-              required: true
-        4XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-        5XX:
-          description: '> Note: Be sure to check the HTTP response code for these errors as well'
-          content:
-            application/json:
-              schema:
-                type: object
-                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
-                properties:
-                  error:
-                    type: string
-                    description: The description of the error
-                  error_id:
-                    type: string
-                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
-                required:
-                - error
-                - error_id
-      security:
-      - access_token:
-        - athletics.rosters:update
   /exams/qualifications:
     get:
       tags:
@@ -85948,6 +85131,875 @@ paths:
       security:
       - access_token:
         - transportation.schedules:read
+  /athletics/rosters/{id}:
+    get:
+      tags:
+      - 'Athletics: Rosters'
+      summary: 'Read Athletics: Rosters'
+      description: 'Default criteria:
+
+
+        - `course_type_include` is in (15)'
+      operationId: read_athletics_rosters
+      parameters:
+      - name: id
+        in: path
+        description: Enrollment ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      internal_class_id:
+                        type: integer
+                        description: Internal Class ID
+                      person_id:
+                        type: integer
+                        description: Person ID
+                      first_name:
+                        type: string
+                        description: First Name
+                        maxLength: 50
+                      preferred_name:
+                        type: string
+                        description: Preferred Name
+                        maxLength: 50
+                      last_name:
+                        type: string
+                        description: Last Name
+                        maxLength: 50
+                      suffix:
+                        type: integer
+                        description: Name Suffix
+                      grade_level_id:
+                        type: integer
+                        description: Grade Level
+                      currently_enrolled:
+                        type: boolean
+                        description: 'Currently Enrolled
+
+
+                          A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
+
+
+
+
+                          For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
+                      late_date_enrolled:
+                        type: string
+                        format: date
+                        description: 'Late Date Enrolled
+
+
+                          The date the student enrolled in the class'
+                      date_withdrawn:
+                        type: string
+                        format: date
+                        description: 'Date Withdrawn
+
+
+                          The date the student withdrew from the class'
+                      level:
+                        type: integer
+                        description: 'Enrollment Level
+
+
+                          The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
+                      jersey_size:
+                        type: integer
+                        description: Jersey Size
+                      jersey_number:
+                        type: string
+                        description: 'Jersey #'
+                        maxLength: 3
+                      position:
+                        type: string
+                        description: Position
+                        maxLength: 20
+                      height:
+                        type: string
+                        description: Height
+                        maxLength: 8
+                      weight:
+                        type: string
+                        description: Weight
+                        maxLength: 10
+                      captain:
+                        type: boolean
+                        description: Captain
+                      lettered:
+                        type: boolean
+                        description: Lettered
+                      exclude_from_transcript:
+                        type: boolean
+                        description: 'Exclude From Transcript
+
+
+                          Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                      exclude_from_report_card:
+                        type: boolean
+                        description: 'Exclude From Report Card
+
+
+                          Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
+                      notes:
+                        type: string
+                        description: Notes
+                        maxLength: 1000
+                    required:
+                    - id
+                    - internal_class_id
+                    - person_id
+                    - first_name
+                    - preferred_name
+                    - last_name
+                    - suffix
+                    - grade_level_id
+                    - currently_enrolled
+                    - late_date_enrolled
+                    - date_withdrawn
+                    - level
+                    - jersey_size
+                    - jersey_number
+                    - position
+                    - height
+                    - weight
+                    - captain
+                    - lettered
+                    - exclude_from_transcript
+                    - exclude_from_report_card
+                    - notes
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - suffix
+                            - grade_level_id
+                            - level
+                            - jersey_size
+                            - school_year
+                            - sport
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - athletics.rosters:read
+    patch:
+      tags:
+      - 'Athletics: Rosters'
+      summary: 'Update Athletics: Rosters'
+      description: 'Default criteria:
+
+
+        - `course_type_include` is in (15)'
+      operationId: update_athletics_rosters
+      parameters:
+      - name: id
+        in: path
+        description: Enrollment ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    internal_class_id:
+                      type: integer
+                      description: Internal Class ID
+                    person_id:
+                      type: integer
+                      description: Person ID
+                    first_name:
+                      type: string
+                      description: First Name
+                      maxLength: 50
+                    preferred_name:
+                      type: string
+                      description: Preferred Name
+                      maxLength: 50
+                    last_name:
+                      type: string
+                      description: Last Name
+                      maxLength: 50
+                    suffix:
+                      type: integer
+                      description: Name Suffix
+                    grade_level_id:
+                      type: integer
+                      description: Grade Level
+                    currently_enrolled:
+                      type: boolean
+                      description: 'Currently Enrolled
+
+
+                        A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
+
+
+
+
+                        For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
+                    late_date_enrolled:
+                      type: string
+                      format: date
+                      description: 'Late Date Enrolled
+
+
+                        The date the student enrolled in the class'
+                    date_withdrawn:
+                      type: string
+                      format: date
+                      description: 'Date Withdrawn
+
+
+                        The date the student withdrew from the class'
+                    level:
+                      type: integer
+                      description: 'Enrollment Level
+
+
+                        The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
+                    jersey_size:
+                      type: integer
+                      description: Jersey Size
+                    jersey_number:
+                      type: string
+                      description: 'Jersey #'
+                      maxLength: 3
+                    position:
+                      type: string
+                      description: Position
+                      maxLength: 20
+                    height:
+                      type: string
+                      description: Height
+                      maxLength: 8
+                    weight:
+                      type: string
+                      description: Weight
+                      maxLength: 10
+                    captain:
+                      type: boolean
+                      description: Captain
+                    lettered:
+                      type: boolean
+                      description: Lettered
+                    exclude_from_transcript:
+                      type: boolean
+                      description: 'Exclude From Transcript
+
+
+                        Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    exclude_from_report_card:
+                      type: boolean
+                      description: 'Exclude From Report Card
+
+
+                        Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    notes:
+                      type: string
+                      description: Notes
+                      maxLength: 1000
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - athletics.rosters:update
+  /academics/enrollments/{id}:
+    get:
+      tags:
+      - 'Academics: Enrollments'
+      summary: 'Read Academics: Enrollments'
+      description: 'Default criteria:
+
+
+        - `school_year` is in (`{Current_School_Year}`)
+
+        - `course_type_exclude` is not in (0, 15, 20, 25, 30, 40)'
+      operationId: read_academics_enrollments
+      parameters:
+      - name: id
+        in: path
+        description: Enrollment ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      internal_class_id:
+                        type: integer
+                        description: Internal Class ID
+                        readOnly: true
+                      class_description:
+                        type: string
+                        description: Description
+                        maxLength: 80
+                      class_status:
+                        type: integer
+                        description: 'Status
+
+
+                          Status of the class (active, future, etc.)'
+                      primary_teacher:
+                        type: object
+                        properties:
+                          name_prefix:
+                            type: string
+                            description: Description
+                            readOnly: true
+                          first_name:
+                            type: string
+                            description: First Name
+                            maxLength: 50
+                          middle_name:
+                            type: string
+                            description: Middle Name
+                            maxLength: 50
+                          last_name:
+                            type: string
+                            description: Last Name
+                            maxLength: 50
+                          name_suffix:
+                            type: string
+                            description: Description
+                            readOnly: true
+                          preferred_name:
+                            type: string
+                            description: Preferred Name
+                            maxLength: 50
+                        required:
+                        - id
+                        - name_prefix
+                        - first_name
+                        - middle_name
+                        - last_name
+                        - name_suffix
+                        - preferred_name
+                      person_id:
+                        type: integer
+                        description: Person ID
+                        readOnly: true
+                      person_name:
+                        type: string
+                        description: 'Full Name
+
+
+                          The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
+                        readOnly: true
+                      grade_level_id:
+                        type: integer
+                        description: ID
+                        readOnly: true
+                      currently_enrolled:
+                        type: boolean
+                        description: 'Currently Enrolled
+
+
+                          A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
+
+
+
+
+                          For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
+                      late_date_enrolled:
+                        type: string
+                        format: date
+                        description: 'Late Date Enrolled
+
+
+                          The date the student enrolled in the class'
+                      date_withdrawn:
+                        type: string
+                        format: date
+                        description: 'Date Withdrawn
+
+
+                          The date the student withdrew from the class'
+                      level:
+                        type: integer
+                        description: 'Enrollment Level
+
+
+                          The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
+                      exclude_from_transcript:
+                        type: boolean
+                        description: 'Exclude From Transcript
+
+
+                          Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                      exclude_from_report_card:
+                        type: boolean
+                        description: 'Exclude From Report Card
+
+
+                          Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
+                      notes:
+                        type: string
+                        description: Notes
+                        maxLength: 1000
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                    required:
+                    - id
+                    - internal_class_id
+                    - class_description
+                    - class_status
+                    - primary_teacher
+                    - person_id
+                    - person_name
+                    - grade_level_id
+                    - currently_enrolled
+                    - late_date_enrolled
+                    - date_withdrawn
+                    - level
+                    - exclude_from_transcript
+                    - exclude_from_report_card
+                    - notes
+                    - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - class_status
+                            - level
+                            - school_year
+                            - course_type
+                            - subject
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.enrollments:read
+    patch:
+      tags:
+      - 'Academics: Enrollments'
+      summary: 'Update Academics: Enrollments'
+      description: 'Default criteria:
+
+
+        - `school_year` is in (`{Current_School_Year}`)
+
+        - `course_type_exclude` is not in (0, 15, 20, 25, 30, 40)'
+      operationId: update_academics_enrollments
+      parameters:
+      - name: id
+        in: path
+        description: Enrollment ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    internal_class_id:
+                      type: integer
+                      description: Internal Class ID
+                      readOnly: true
+                    class_description:
+                      type: string
+                      description: Description
+                      maxLength: 80
+                    class_status:
+                      type: integer
+                      description: 'Status
+
+
+                        Status of the class (active, future, etc.)'
+                    primary_teacher:
+                      type: object
+                      properties:
+                        name_prefix:
+                          type: string
+                          description: Description
+                          readOnly: true
+                        first_name:
+                          type: string
+                          description: First Name
+                          maxLength: 50
+                        middle_name:
+                          type: string
+                          description: Middle Name
+                          maxLength: 50
+                        last_name:
+                          type: string
+                          description: Last Name
+                          maxLength: 50
+                        name_suffix:
+                          type: string
+                          description: Description
+                          readOnly: true
+                        preferred_name:
+                          type: string
+                          description: Preferred Name
+                          maxLength: 50
+                      required:
+                      - id
+                      - name_prefix
+                      - first_name
+                      - middle_name
+                      - last_name
+                      - name_suffix
+                      - preferred_name
+                    person_id:
+                      type: integer
+                      description: Person ID
+                      readOnly: true
+                    person_name:
+                      type: string
+                      description: 'Full Name
+
+
+                        The full name of an individual in the school-defined format, often &lt;last name&gt;, &lt;first name&gt;'
+                      readOnly: true
+                    grade_level_id:
+                      type: integer
+                      description: ID
+                      readOnly: true
+                    currently_enrolled:
+                      type: boolean
+                      description: 'Currently Enrolled
+
+
+                        A read-only calculated field, this field indicates whether the student is currently enrolled in the class. It is based on a combination of the &quot;Late Date Enrolled&quot; and &quot;Date Withdrawn&quot; fields.
+
+
+
+
+                        For Classes with a waitlist, if the student is on the waitlist, this field will also report they are not in the class.'
+                    late_date_enrolled:
+                      type: string
+                      format: date
+                      description: 'Late Date Enrolled
+
+
+                        The date the student enrolled in the class'
+                    date_withdrawn:
+                      type: string
+                      format: date
+                      description: 'Date Withdrawn
+
+
+                        The date the student withdrew from the class'
+                    level:
+                      type: integer
+                      description: 'Enrollment Level
+
+
+                        The enrollment level is used when some students are taking the class for a different level of credit than other students. If all students are taking the course for the same level of credit, setting the enrollment level is NOT necessary. If the student&#39;s enrollment level should influence GPA, please review &quot;override grade conversion scale&quot; on the student&#39;s class enrollment record.'
+                    exclude_from_transcript:
+                      type: boolean
+                      description: 'Exclude From Transcript
+
+
+                        Excludes posted grades for this enrollment from being posted to the transcript.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    exclude_from_report_card:
+                      type: boolean
+                      description: 'Exclude From Report Card
+
+
+                        Excludes posted grades for this enrollment from being displayed on the report-card.  Selecting this option does NOT impact this student&#39;s GPA.'
+                    notes:
+                      type: string
+                      description: Notes
+                      maxLength: 1000
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - academics.enrollments:update
 components:
   securitySchemes:
     access_token:

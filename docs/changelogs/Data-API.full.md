@@ -2,6 +2,56 @@
 
 ## November 2026
 
+### 2026-11-23
+
+#### GET /academics/enrollments
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.exclude_from_report_card` to the response with the `200` status |
+
+#### GET /academics/enrollments/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.exclude_from_report_card` to the response with the `200` status |
+
+#### GET /athletics/rosters
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.items.exclude_from_report_card` to the response with the `200` status |
+
+#### GET /athletics/rosters/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added property `data.exclude_from_report_card` to the response with the `200` status |
+
+#### PATCH /academics/enrollments/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.exclude_from_report_card` |
+
+#### PATCH /athletics/rosters/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.exclude_from_report_card` |
+
+#### POST /academics/enrollments
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.exclude_from_report_card` |
+
+#### POST /athletics/rosters
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Added request property `data.exclude_from_report_card` |
+
 ### 2026-11-18
 
 #### GET /academics/qualitative_grades

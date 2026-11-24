@@ -3,39 +3,8 @@
   "workspace_slug": "veracross",
   "workspace_id": 8075,
   "node_count": 608,
-  "fetched": 602,
-  "errors": [
-    [
-      "ZG9jOjM2NTM3MTQ1",
-      "/docs/diagrams/api-request.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjM2NTM3MTQ1 (<HTTPError 500: 'Internal Server Error'>)\")"
-    ],
-    [
-      "ZG9jOjIzNDQ1MDcx",
-      "/docs/guides/integrating-with-admission-endpoints.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjIzNDQ1MDcx (<HTTPError 500: 'Internal Server Error'>)\")"
-    ],
-    [
-      "ZG9jOjMzNzcxODM",
-      "/docs/concepts/value-lists.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODM (<HTTPError 500: 'Internal Server Error'>)\")"
-    ],
-    [
-      "ZG9jOjMzNzcxNzg",
-      "/docs/concepts/breaking-changes-policy.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxNzg (<HTTPError 500: 'Internal Server Error'>)\")"
-    ],
-    [
-      "ZG9jOjMzNzcxODQ",
-      "/docs/guides/student-logistics-requests.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODQ (<HTTPError 500: 'Internal Server Error'>)\")"
-    ],
-    [
-      "ZG9jOjMzNzcxODE",
-      "/docs/concepts/pagination.md",
-      "RuntimeError(\"GET failed after 4 tries: https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODE (<HTTPError 500: 'Internal Server Error'>)\")"
-    ]
-  ],
+  "fetched": 608,
+  "errors": [],
   "articles": [
     {
       "path": "docs/errors.md",
@@ -78,11 +47,6 @@
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/7b26f8fa147e2"
     },
     {
-      "path": "docs/guides/creating-an-sso-integration.md",
-      "title": "Creating an SSO Integration",
-      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/5fb9f96bc480a"
-    },
-    {
       "path": "docs/concepts/access-tokens.md",
       "title": "Access Tokens",
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/097f6c769cafb"
@@ -113,9 +77,39 @@
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/fd2d3c39fa28f"
     },
     {
+      "path": "docs/diagrams/api-request.md",
+      "title": "Diagram: API Request",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjM2NTM3MTQ1"
+    },
+    {
+      "path": "docs/guides/integrating-with-admission-endpoints.md",
+      "title": "Integrating with Admission Endpoints",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjIzNDQ1MDcx"
+    },
+    {
       "path": "docs/diagrams/oauth-sso-login-flow.md",
       "title": "Diagram: OAuth SSO Login Flow",
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/6ceadcca9ad7f"
+    },
+    {
+      "path": "docs/concepts/breaking-changes-policy.md",
+      "title": "Breaking Changes Policy",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxNzg"
+    },
+    {
+      "path": "docs/concepts/value-lists.md",
+      "title": "Value Lists",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODM"
+    },
+    {
+      "path": "docs/guides/student-logistics-requests.md",
+      "title": "Student Logistics Requests",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODQ"
+    },
+    {
+      "path": "docs/concepts/pagination.md",
+      "title": "Pagination",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ZG9jOjMzNzcxODE"
     },
     {
       "path": "docs/concepts/using-the-data-api.md",
@@ -136,6 +130,11 @@
       "path": "docs/changelogs/Data-API.full.md",
       "title": "Data API - Full Changelog",
       "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/ed84457d05c15"
+    },
+    {
+      "path": "docs/guides/creating-an-sso-integration.md",
+      "title": "Creating an SSO Integration",
+      "source": "https://api-docs.veracross.com/api/v1/projects/cHJqOjQ3NTA5/nodes/5fb9f96bc480a"
     }
   ],
   "specs": [
@@ -175,5 +174,5 @@
       "paths": 7
     }
   ],
-  "generated_at": "2026-11-19T06:33:14Z"
+  "generated_at": "2026-11-24T06:32:35Z"
 }

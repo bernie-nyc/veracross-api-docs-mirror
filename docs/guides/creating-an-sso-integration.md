@@ -2,7 +2,7 @@
 
 Veracross can operate as an Identity Provider (IDP) for vendor/partner sites looking to build Single Sign-On (SSO) integrations. This means that school users such as Faculty, Staff, Students, etc can use their Veracross Account to log in to vendor/partner sites without needing a separate password for each site.
 
-Refer to our [OAuth SSO Login Flow](../docs/diagrams/oauth-sso-login-flow.md) for an overview diagram of each possible step of a user login flow.
+Refer to our [OAuth SSO Login Flow](../diagrams/oauth-sso-login-flow.md) for an overview diagram of each possible step of a user login flow.
 
 ## Before You Begin: Is this integration required?
 
