@@ -55,6 +55,7 @@ tags:
 - name: 'Admission: Relative Relationships'
 - name: 'Admission: Relatives'
 - name: 'Alumni: Demographics'
+- name: Ancestral Affiliations
 - name: 'Athletics: Rosters'
 - name: 'Athletics: Sports'
 - name: 'Athletics: Team - Coaches'
@@ -86000,6 +86001,641 @@ paths:
       security:
       - access_token:
         - academics.enrollments:update
+  /ancestral_affiliations:
+    post:
+      tags:
+      - Ancestral Affiliations
+      summary: Create Ancestral Affiliations
+      description: 'NOTE: This endpoint (and the corresponding schema concept) is currently available for schools in New Zealand only. It will be made available to all other schools in Q1 2027.'
+      operationId: create_ancestral_affiliations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    person_id:
+                      type: integer
+                      description: Person ID
+                    affiliation_id:
+                      type: integer
+                      description: Affiliation ID
+                    code:
+                      type: string
+                      description: Code
+                      maxLength: 200
+                    notes:
+                      type: string
+                      description: Notes
+                    source:
+                      type: integer
+                      description: Source
+                    start_date:
+                      type: string
+                      format: date-time
+                      description: Start Date
+                    end_date:
+                      type: string
+                      format: date-time
+                      description: End Date
+                    affiliation_type:
+                      type: integer
+                      description: Category
+                      readOnly: true
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+                  required:
+                  - person_id
+                  - affiliation_id
+                  - code
+              required:
+              - data
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties: {}
+                    required:
+                    - id
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - ancestral_affiliations:create
+    get:
+      tags:
+      - Ancestral Affiliations
+      summary: List Ancestral Affiliations
+      description: 'NOTE: This endpoint (and the corresponding schema concept) is currently available for schools in New Zealand only. It will be made available to all other schools in Q1 2027.'
+      operationId: list_ancestral_affiliations
+      parameters:
+      - name: person_id
+        in: query
+        description: Person ID
+        schema:
+          type: integer
+      - name: affiliation_id
+        in: query
+        description: Affiliation ID
+        schema:
+          type: integer
+      - name: code
+        in: query
+        description: Code
+        schema:
+          type: string
+          maxLength: 200
+      - name: affiliation_type
+        in: query
+        description: Category
+        schema:
+          type: integer
+      - name: on_or_after_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      - name: on_or_before_last_modified_date
+        in: query
+        description: Last Modified Date
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        person_id:
+                          type: integer
+                          description: Person ID
+                        affiliation_id:
+                          type: integer
+                          description: Affiliation ID
+                        code:
+                          type: string
+                          description: Code
+                          maxLength: 200
+                        notes:
+                          type: string
+                          description: Notes
+                        source:
+                          type: integer
+                          description: Source
+                        start_date:
+                          type: string
+                          format: date-time
+                          description: Start Date
+                        end_date:
+                          type: string
+                          format: date-time
+                          description: End Date
+                        affiliation_type:
+                          type: integer
+                          description: Category
+                          readOnly: true
+                        last_modified_date:
+                          type: string
+                          format: date-time
+                          description: Last Modified Date
+                          readOnly: true
+                      required:
+                      - id
+                      - person_id
+                      - affiliation_id
+                      - code
+                      - notes
+                      - source
+                      - start_date
+                      - end_date
+                      - affiliation_type
+                      - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - affiliation_id
+                            - source
+                            - affiliation_type
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - ancestral_affiliations:list
+  /ancestral_affiliations/{id}:
+    delete:
+      tags:
+      - Ancestral Affiliations
+      summary: Delete Ancestral Affiliations
+      description: 'NOTE: This endpoint (and the corresponding schema concept) is currently available for schools in New Zealand only. It will be made available to all other schools in Q1 2027.'
+      operationId: delete_ancestral_affiliations
+      parameters:
+      - name: id
+        in: path
+        description: Person Ancestral Affiliation ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - ancestral_affiliations:delete
+    get:
+      tags:
+      - Ancestral Affiliations
+      summary: Read Ancestral Affiliations
+      description: 'NOTE: This endpoint (and the corresponding schema concept) is currently available for schools in New Zealand only. It will be made available to all other schools in Q1 2027.'
+      operationId: read_ancestral_affiliations
+      parameters:
+      - name: id
+        in: path
+        description: Person Ancestral Affiliation ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      person_id:
+                        type: integer
+                        description: Person ID
+                      affiliation_id:
+                        type: integer
+                        description: Affiliation ID
+                      code:
+                        type: string
+                        description: Code
+                        maxLength: 200
+                      notes:
+                        type: string
+                        description: Notes
+                      source:
+                        type: integer
+                        description: Source
+                      start_date:
+                        type: string
+                        format: date-time
+                        description: Start Date
+                      end_date:
+                        type: string
+                        format: date-time
+                        description: End Date
+                      affiliation_type:
+                        type: integer
+                        description: Category
+                        readOnly: true
+                      last_modified_date:
+                        type: string
+                        format: date-time
+                        description: Last Modified Date
+                        readOnly: true
+                    required:
+                    - id
+                    - person_id
+                    - affiliation_id
+                    - code
+                    - notes
+                    - source
+                    - start_date
+                    - end_date
+                    - affiliation_type
+                    - last_modified_date
+                  value_lists:
+                    type: array
+                    description: Present only with header `X-API-Value-Lists = include`
+                    readOnly: true
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          description: An array of field names from `data` that this value list goes with
+                          items:
+                            type: string
+                            enum:
+                            - affiliation_id
+                            - source
+                            - affiliation_type
+                        items:
+                          type: array
+                          description: An array of value list items whose `id` field matches the value in the response data
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              category:
+                                type: integer
+                              sort_key:
+                                type: integer
+                              obsolete:
+                                type: boolean
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                        categories:
+                          type: array
+                          description: An array of "category" objects, which allow you to partition the value list items according to their category field
+                          items:
+                            type: object
+                            properties:
+                              description:
+                                type: string
+                              sort_key:
+                                type: integer
+                            required:
+                            - id
+                            - description
+                            - sort_key
+                      required:
+                      - fields
+                      - items
+                      - categories
+                required:
+                - data
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - ancestral_affiliations:read
+    patch:
+      tags:
+      - Ancestral Affiliations
+      summary: Update Ancestral Affiliations
+      description: 'NOTE: This endpoint (and the corresponding schema concept) is currently available for schools in New Zealand only. It will be made available to all other schools in Q1 2027.'
+      operationId: update_ancestral_affiliations
+      parameters:
+      - name: id
+        in: path
+        description: Person Ancestral Affiliation ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    person_id:
+                      type: integer
+                      description: Person ID
+                    affiliation_id:
+                      type: integer
+                      description: Affiliation ID
+                    code:
+                      type: string
+                      description: Code
+                      maxLength: 200
+                    notes:
+                      type: string
+                      description: Notes
+                    source:
+                      type: integer
+                      description: Source
+                    start_date:
+                      type: string
+                      format: date-time
+                      description: Start Date
+                    end_date:
+                      type: string
+                      format: date-time
+                      description: End Date
+                    affiliation_type:
+                      type: integer
+                      description: Category
+                      readOnly: true
+                    last_modified_date:
+                      type: string
+                      format: date-time
+                      description: Last Modified Date
+                      readOnly: true
+              required:
+              - data
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-API-Revision:
+              description: API Revision
+              schema:
+                type: string
+              required: true
+        4XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+        5XX:
+          description: '> Note: Be sure to check the HTTP response code for these errors as well'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'HTTP response codes describe the error type. See here for a list of HTTP response codes and their meanings: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status'
+                properties:
+                  error:
+                    type: string
+                    description: The description of the error
+                  error_id:
+                    type: string
+                    description: A unique ID for this specific error. Please provide this error id when you ask for help with an error.
+                required:
+                - error
+                - error_id
+      security:
+      - access_token:
+        - ancestral_affiliations:update
 components:
   securitySchemes:
     access_token:
@@ -86132,6 +86768,11 @@ components:
             admission.relatives:create: 'Create Admission: Relatives'
             alumni.demographics:list: 'List Alumni: Demographics'
             alumni.demographics:read: 'Read Alumni: Demographics'
+            ancestral_affiliations:create: Create Ancestral Affiliations
+            ancestral_affiliations:delete: Delete Ancestral Affiliations
+            ancestral_affiliations:list: List Ancestral Affiliations
+            ancestral_affiliations:read: Read Ancestral Affiliations
+            ancestral_affiliations:update: Update Ancestral Affiliations
             athletics.rosters:create: 'Create Athletics: Rosters'
             athletics.rosters:list: 'List Athletics: Rosters'
             athletics.rosters:read: 'Read Athletics: Rosters'

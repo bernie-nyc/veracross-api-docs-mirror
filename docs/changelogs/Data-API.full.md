@@ -2,6 +2,38 @@
 
 ## November 2026
 
+### 2026-11-25
+
+#### DELETE /ancestral_affiliations/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Endpoint added |
+
+#### GET /ancestral_affiliations
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Endpoint added |
+
+#### GET /ancestral_affiliations/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Endpoint added |
+
+#### PATCH /ancestral_affiliations/{id}
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Endpoint added |
+
+#### POST /ancestral_affiliations
+
+|    | Description |
+|----|-------------|
+| <img src='https://assets.veracross.com/_documentation/api/icons/plus.svg' alt='plus' width='16' height='16' style='max-width: 16px; padding-top: 4px; pointer-events: none;'> | Endpoint added |
+
 ### 2026-11-23
 
 #### GET /academics/enrollments
